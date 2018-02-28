@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'jacoco-android'
 
 group = 'com.github.rubygarage'
 
@@ -30,6 +31,12 @@ buildscript {
 ext {
     retrofitVersion = '2.3.0'
     okHttpVersion = '3.9.0'
+}
+
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled false
+    xml.enabled true
 }
 
 dependencies {
@@ -73,4 +80,25 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+project.afterEvaluate {
+    android.libraryVariants.all { variant ->
+        def realVariantName = variant.name
+        def variantName = variant.name.capitalize()
+
+        def task = project.tasks["jacocoTest${variantName}UnitTestReport"]
+        def defaultExcludes = task.classDirectories.excludes
+
+        def additionalExcludes = [
+            'com/shopify/buy3/**/*'
+        ]
+
+        def excludes = defaultExcludes + additionalExcludes
+
+        def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${realVariantName}", excludes: excludes)
+
+        task.classDirectories.excludes = excludes
+        task.classDirectories += kotlinDebugTree
+    }
 }
