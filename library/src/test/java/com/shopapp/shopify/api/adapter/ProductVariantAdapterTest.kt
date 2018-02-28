@@ -1,7 +1,8 @@
 package com.shopapp.shopify.api.adapter
 
 import com.shopapp.shopify.StorefrontMockInstantiator
-import junit.framework.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -12,13 +13,13 @@ class ProductVariantAdapterTest {
     @Test
     fun shouldAdaptFromProductVariantStorefrontToProductVariant() {
         val result = ProductVariantAdapter.adapt(StorefrontMockInstantiator.newProductVariant())
-        Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ID, result.id)
-        Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_TITLE, result.title)
-        Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_PRICE, result.price)
-        Assert.assertEquals(true, result.isAvailable)
-        Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ID, result.productId)
-        Assert.assertNotNull(result.selectedOptions.first())
-        Assert.assertNotNull(result.image)
-        Assert.assertNotNull(result.productImage)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_ID, result.id)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_TITLE, result.title)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_PRICE, result.price)
+        assertEquals(true, result.isAvailable)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_ID, result.productId)
+        assertNotNull(result.selectedOptions.first())
+        assertNotNull(result.image)
+        assertNotNull(result.productImage)
     }
 }

@@ -1,7 +1,7 @@
 package com.shopapp.shopify.api.adapter
 
 import com.shopapp.shopify.StorefrontMockInstantiator
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
