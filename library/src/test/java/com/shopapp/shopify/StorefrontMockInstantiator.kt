@@ -13,8 +13,11 @@ object StorefrontMockInstantiator {
     const val DEFAULT_SRC = "default_src"
     const val DEFAULT_ALT_TEXT = "default_alt_text"
     const val DEFAULT_NAME = "default_name"
+    const val DEFAULT_SHOP_NAME = "default_shop_name"
     const val DEFAULT_VALUE = "default_value"
     const val DEFAULT_TITLE = "default_title"
+    const val DEFAULT_DESCRIPTION = "default_description"
+    const val DEFAULT_BODY = "default_body"
     const val DEFAULT_QUANTITY = 5
     const val DEFAULT_ADDRESS = "default_address"
     const val DEFAULT_CITY = "default_city"
@@ -25,7 +28,9 @@ object StorefrontMockInstantiator {
     const val DEFAULT_STATE = "default_province"
     const val DEFAULT_ZIP = "default_zip"
     const val DEFAULT_EMAIL = "default@email.com"
+    const val DEFAULT_URL = "https://default.com"
     const val DEFAULT_ORDER_NUMBER = 15
+    const val DEFAULT_ACCEPT_MARKETING = false
     val DEFAULT_PRICE: BigDecimal = BigDecimal.TEN
     val DEFAULT_DATE: DateTime = DateTime.now()
     val DEFAULT_CURRENCY_CODE: Storefront.CurrencyCode = Storefront.CurrencyCode.USD
@@ -88,6 +93,30 @@ object StorefrontMockInstantiator {
         on { zip } doReturn DEFAULT_ZIP
     }
 
+    fun newCustomer(): Storefront.Customer = mock {
+        val addressConnection = newAddressConnection()
+        val address = addressConnection.edges[0].node
+
+        on { id } doReturn newID()
+        on { email } doReturn DEFAULT_EMAIL
+        on { defaultAddress } doReturn address
+        on { firstName } doReturn DEFAULT_FIRST_NAME
+        on { lastName } doReturn DEFAULT_LAST_NAME
+        on { phone } doReturn DEFAULT_PHONE
+        on { acceptsMarketing } doReturn DEFAULT_ACCEPT_MARKETING
+        on { addresses } doReturn addressConnection
+    }
+
+    fun newAddressConnection(): Storefront.MailingAddressConnection = mock {
+        val edgeMockList = listOf(newAddressEdge())
+        on { edges } doReturn edgeMockList
+    }
+
+    private fun newAddressEdge(): Storefront.MailingAddressEdge = mock {
+        val addressMock = newAddress()
+        on { node } doReturn addressMock
+    }
+
     fun newOrder(): Storefront.Order = mock {
         val addressMock = newAddress()
         val lineItemsMock = newOrderLineItemConnection()
@@ -101,6 +130,22 @@ object StorefrontMockInstantiator {
         on { shippingAddress } doReturn addressMock
         on { processedAt } doReturn DEFAULT_DATE
         on { lineItems } doReturn lineItemsMock
+    }
+
+    fun newShop(): Storefront.Shop = mock {
+        val policy = newPolicy()
+        on { name } doReturn DEFAULT_SHOP_NAME
+        on { privacyPolicy } doReturn policy
+        on { description } doReturn DEFAULT_DESCRIPTION
+        on { refundPolicy } doReturn policy
+        on { termsOfService } doReturn policy
+    }
+
+
+    fun newPolicy(): Storefront.ShopPolicy = mock {
+        on { title } doReturn DEFAULT_TITLE
+        on { body } doReturn DEFAULT_BODY
+        on { url } doReturn DEFAULT_URL
     }
 
     fun newOrderConnection(): Storefront.OrderConnection = mock {
