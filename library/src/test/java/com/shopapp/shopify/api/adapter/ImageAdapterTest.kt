@@ -2,8 +2,7 @@ package com.shopapp.shopify.api.adapter
 
 import com.shopapp.shopify.JodaTimeAndroidRule
 import com.shopapp.shopify.StorefrontMockInstantiator
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,5 +22,11 @@ class ImageAdapterTest {
         assertEquals(StorefrontMockInstantiator.DEFAULT_ID, result.id)
         assertEquals(StorefrontMockInstantiator.DEFAULT_SRC, result.src)
         assertEquals(StorefrontMockInstantiator.DEFAULT_ALT_TEXT, result.alt)
+    }
+
+    @Test
+    fun shouldReturnNull() {
+        val result = ImageAdapter.adapt(null)
+        assertNull(result)
     }
 }

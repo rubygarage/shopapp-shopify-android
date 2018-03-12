@@ -60,28 +60,10 @@ class ProductAdapterTest {
 
     @Test
     fun shouldAdaptFromProductStorefrontToProductWithoutVariants() {
-
         val storefrontProduct = StorefrontMockInstantiator.newProduct()
         val product = ProductAdapter.adapt(shop, storefrontProduct, DEFAULT_PAGINATION_VALUE, false)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_ID, product.id)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_TITLE, product.title)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_DESCRIPTION, product.productDescription)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_DESCRIPTION, product.additionalDescription)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_CURRENCY_CODE.toString(), product.currency)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_PRICE, product.price)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_VENDOR, product.vendor)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_TYPE, product.type)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_DATE.toDate(), product.createdAt)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_DATE.toDate(), product.updatedAt)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_STRING, product.tags)
-        assertEquals(DEFAULT_PAGINATION_VALUE, product.paginationValue)
-        assertFalse(product.hasAlternativePrice)
-        assertNotNull(product.options)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, product.options.size)
-        assertNotNull(product.images)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, product.images.size)
         assertNotNull(product.variants)
-        assertEquals(0, product.variants.size)
+        assertTrue(product.variants.isEmpty())
     }
 
     @Test
@@ -104,23 +86,8 @@ class ProductAdapterTest {
         given(storefrontProduct.variants).willReturn(productConnection)
 
         val product = ProductAdapter.adapt(shop, storefrontProduct)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_ID, product.id)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_TITLE, product.title)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_DESCRIPTION, product.productDescription)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_DESCRIPTION, product.additionalDescription)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_CURRENCY_CODE.toString(), product.currency)
         assertEquals(BigDecimal.valueOf(100), product.price)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_VENDOR, product.vendor)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_TYPE, product.type)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_DATE.toDate(), product.createdAt)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_DATE.toDate(), product.updatedAt)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_STRING, product.tags)
         assertEquals(null, product.paginationValue)
-        assertTrue(product.hasAlternativePrice)
-        assertNotNull(product.options)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, product.options.size)
-        assertNotNull(product.images)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, product.images.size)
         assertNotNull(product.variants)
         assertEquals(2, product.variants.size)
     }
@@ -130,6 +97,7 @@ class ProductAdapterTest {
         val defaultValue = listOf(StorefrontMockInstantiator.DEFAULT_TITLE)
         val option: Storefront.ProductOption = StorefrontMockInstantiator.newProductOption()
         given(option.values).willReturn(defaultValue)
+
         val storefrontProduct = StorefrontMockInstantiator.newProduct()
         given(storefrontProduct.options).willReturn(listOf(option))
 
@@ -140,5 +108,58 @@ class ProductAdapterTest {
         assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, product.images.size)
         assertNotNull(product.variants)
         assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, product.variants.size)
+    }
+
+    @Test
+    fun shouldIgnoreNullVariants() {
+        val variants: MutableList<Storefront.ProductVariantEdge?> = mutableListOf()
+        variants.addAll(StorefrontMockInstantiator.newList(StorefrontMockInstantiator.newProductVariantEdge()))
+        variants.add(null)
+
+        val variantsConnection: Storefront.ProductVariantConnection = mock {
+            on { edges } doReturn variants
+        }
+
+        val product = StorefrontMockInstantiator.newProduct()
+        given(product.variants).willReturn(variantsConnection)
+
+        val result = ProductAdapter.adapt(shop, product)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE + 1, product.variants.edges.size)
+        assertNotNull(product.variants)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, result.variants.size)
+    }
+
+    @Test
+    fun shouldSetDefaultPriceOnEmptyVariantList() {
+        val variants: MutableList<Storefront.ProductVariantEdge?> = mutableListOf()
+        val variantsConnection: Storefront.ProductVariantConnection = mock {
+            on { edges } doReturn variants
+        }
+
+        val product = StorefrontMockInstantiator.newProduct()
+        given(product.variants).willReturn(variantsConnection)
+
+        val result = ProductAdapter.adapt(shop, product)
+        assertEquals(BigDecimal.ZERO, result.price)
+        assertFalse(result.hasAlternativePrice)
+        assertTrue(result.variants.isEmpty())
+    }
+
+    @Test
+    fun shouldSetDefaultPriceOnNullVariantItem() {
+        val variants: MutableList<Storefront.ProductVariantEdge?> = mutableListOf()
+        variants.add(null)
+
+        val variantsConnection: Storefront.ProductVariantConnection = mock {
+            on { edges } doReturn variants
+        }
+
+        val product = StorefrontMockInstantiator.newProduct()
+        given(product.variants).willReturn(variantsConnection)
+
+        val result = ProductAdapter.adapt(shop, product)
+        assertEquals(BigDecimal.ZERO, result.price)
+        assertFalse(result.hasAlternativePrice)
+        assertTrue(result.variants.isEmpty())
     }
 }

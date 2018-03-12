@@ -1,5 +1,6 @@
 package com.shopapp.shopify.api.adapter
 
+import com.nhaarman.mockito_kotlin.given
 import com.shopapp.shopify.JodaTimeAndroidRule
 import com.shopapp.shopify.StorefrontMockInstantiator
 import org.junit.Assert.*
@@ -27,6 +28,36 @@ class CheckoutAdapterTest {
         assertEquals(StorefrontMockInstantiator.DEFAULT_CURRENCY_CODE.toString(), checkout.currency)
         assertFalse(checkout.requiresShipping)
         assertNotNull(checkout.address)
+    }
+
+    @Test
+    fun shouldAdaptShippingRate() {
+        val srcCheckout = StorefrontMockInstantiator.newCheckout()
+        val checkout = CheckoutAdapter.adapt(srcCheckout)
         assertNotNull(checkout.shippingRate)
+    }
+
+    @Test
+    fun shouldSetNullIfShippingIsNull() {
+        val srcCheckout = StorefrontMockInstantiator.newCheckout()
+        given(srcCheckout.shippingLine).willReturn(null)
+        val checkout = CheckoutAdapter.adapt(srcCheckout)
+        assertNull(checkout.shippingRate)
+    }
+
+
+    @Test
+    fun shouldAdaptAddress() {
+        val srcCheckout = StorefrontMockInstantiator.newCheckout()
+        val checkout = CheckoutAdapter.adapt(srcCheckout)
+        assertNotNull(checkout.shippingRate)
+    }
+
+    @Test
+    fun shouldSetNullifAddressIsNull() {
+        val srcCheckout = StorefrontMockInstantiator.newCheckout()
+        given(srcCheckout.shippingAddress).willReturn(null)
+        val checkout = CheckoutAdapter.adapt(srcCheckout)
+        assertNull(checkout.address)
     }
 }

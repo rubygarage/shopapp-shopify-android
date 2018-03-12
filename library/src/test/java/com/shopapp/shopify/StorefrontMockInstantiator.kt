@@ -307,7 +307,7 @@ object StorefrontMockInstantiator {
         on { edges } doReturn listOf(edgeMock)
     }
 
-    private fun newOrderLineItemEdge(): Storefront.OrderLineItemEdge = mock {
+    fun newOrderLineItemEdge(): Storefront.OrderLineItemEdge = mock {
         val orderLineItemMock = newOrderLineItem()
         on { node } doReturn orderLineItemMock
     }
@@ -326,20 +326,20 @@ object StorefrontMockInstantiator {
         on { node } doReturn image
     }
 
-    private fun newProductVariantEdge(): Storefront.ProductVariantEdge = mock {
+    fun newProductVariantEdge(): Storefront.ProductVariantEdge = mock {
         val variant = newProductVariant()
 
         on { node } doReturn variant
     }
 
-    private fun newProductVariantConnection(): Storefront.ProductVariantConnection = mock {
+    fun newProductVariantConnection(): Storefront.ProductVariantConnection = mock {
         val result = newList(newProductVariantEdge())
 
         on { edges } doReturn listOf(result)
     }
 
-    private fun newAddressConnection(): Storefront.MailingAddressConnection = mock {
-        val edgeMockList = listOf(newAddressEdge())
+    fun newAddressConnection(): Storefront.MailingAddressConnection = mock {
+        val edgeMockList = newList(newAddressEdge())
         on { edges } doReturn edgeMockList
     }
 

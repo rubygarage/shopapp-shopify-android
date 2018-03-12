@@ -51,6 +51,13 @@ class ErrorAdapterTest {
     }
 
     @Test
+    fun shouldReturnNullOnEmptyErrorList() {
+        val errors: List<com.shopify.graphql.support.Error>? = listOf()
+        val actual = ErrorAdapter.adaptErrors(errors)
+        assertNull(actual)
+    }
+
+    @Test
     fun shouldAdaptStorefrontUserErrorToNonCriticalError() {
         val errors = listOf(StorefrontMockInstantiator.newUserError())
         val actual = ErrorAdapter.adaptUserError(errors)
@@ -61,6 +68,13 @@ class ErrorAdapterTest {
     @Test
     fun shouldReturnNullOnNullUserErrorList() {
         val errors: List<Storefront.UserError>? = null
+        val actual = ErrorAdapter.adaptUserError(errors)
+        assertNull(actual)
+    }
+
+    @Test
+    fun shouldReturnNullOnEmptyUserErrorList() {
+        val errors: List<Storefront.UserError>? = listOf()
         val actual = ErrorAdapter.adaptUserError(errors)
         assertNull(actual)
     }

@@ -3,6 +3,7 @@ package com.shopapp.shopify.api.adapter
 import com.shopapp.shopify.JodaTimeAndroidRule
 import com.shopapp.shopify.StorefrontMockInstantiator
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,5 +22,11 @@ class PolicyAdapterTest {
         assertEquals(StorefrontMockInstantiator.DEFAULT_TITLE, policy.title)
         assertEquals(StorefrontMockInstantiator.DEFAULT_BODY, policy.body)
         assertEquals(StorefrontMockInstantiator.DEFAULT_URL, policy.url)
+    }
+
+    @Test
+    fun shouldReturnNullPolicy() {
+        val result = PolicyAdapter.adapt(null)
+        assertNull(result)
     }
 }

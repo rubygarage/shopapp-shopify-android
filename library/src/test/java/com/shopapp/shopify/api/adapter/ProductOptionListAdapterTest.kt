@@ -2,8 +2,7 @@ package com.shopapp.shopify.api.adapter
 
 import com.shopapp.shopify.JodaTimeAndroidRule
 import com.shopapp.shopify.StorefrontMockInstantiator
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,5 +27,12 @@ class ProductOptionListAdapterTest {
         assertEquals(StorefrontMockInstantiator.DEFAULT_NAME, option.name)
         assertNotNull(option.values)
         assertEquals(3, option.values.size)
+    }
+
+    @Test
+    fun shouldReturnEmptyListOnNullConnection() {
+        val options = ProductOptionListAdapter.adapt(null)
+        assertNotNull(options)
+        assertTrue(options.isEmpty())
     }
 }

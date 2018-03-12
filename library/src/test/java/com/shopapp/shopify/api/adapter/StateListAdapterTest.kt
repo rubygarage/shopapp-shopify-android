@@ -2,6 +2,9 @@ package com.shopapp.shopify.api.adapter
 
 import com.shopapp.shopify.JodaTimeAndroidRule
 import com.shopapp.shopify.StorefrontMockInstantiator
+import com.shopapp.shopify.api.entity.ApiCountry
+import com.shopapp.shopify.api.entity.ApiState
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Rule
@@ -19,8 +22,16 @@ class StateListAdapterTest {
     @Test
     fun shouldAdaptFromApiStateListToStateList() {
         val list = StorefrontMockInstantiator.newList(StorefrontMockInstantiator.newState())
-        val countries = StateListAdapter.adapt(list)
-        assertNotNull(countries)
-        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, countries.size)
+        val states = StateListAdapter.adapt(list)
+        assertNotNull(states)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, states.size)
+    }
+
+    @Test
+    fun shouldReturnEmptyList() {
+        val list: List<ApiState>? = null
+        val states = StateListAdapter.adapt(list)
+        assertNotNull(states)
+        Assert.assertTrue(states.isEmpty())
     }
 }
