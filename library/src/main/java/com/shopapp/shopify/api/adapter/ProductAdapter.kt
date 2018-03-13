@@ -61,7 +61,7 @@ object ProductAdapter {
             price = pricePair.first,
             hasAlternativePrice = pricePair.first != pricePair.second,
             images = productImages,
-            options = convertProductOptionList(productAdaptee.options),
+            options = ProductOptionListAdapter.adapt(productAdaptee.options),
             variants = variants,
             paginationValue = paginationValue
         )
@@ -80,11 +80,4 @@ object ProductAdapter {
     private fun convertImage(productAdaptee: Storefront.Product): List<Image> =
         productAdaptee.images.edges.notNullMap { ImageAdapter.adapt(it.node)!! }
 
-    private fun convertProductOptionList(options: List<Storefront.ProductOption>?): List<ProductOption> {
-        return if (options != null) {
-            ProductOptionListAdapter.adapt(options)
-        } else {
-            listOf()
-        }
-    }
 }
