@@ -5,6 +5,7 @@ import com.shopapp.gateway.entity.Product
 import com.shopapp.gateway.entity.ProductOption
 import com.shopapp.gateway.entity.ProductVariant
 import com.shopapp.shopify.api.ext.isSingleOptions
+import com.shopapp.shopify.api.ext.notNullMap
 import com.shopapp.shopify.constant.Constant.DEFAULT_STRING
 import com.shopify.buy3.Storefront
 import java.math.BigDecimal
@@ -22,7 +23,7 @@ object ProductAdapter {
                 shopAdaptee,
                 productAdaptee,
                 paginationValue,
-                productAdaptee.variants.edges.mapNotNull { ProductVariantAdapter.adapt(it.node) }
+                productAdaptee.variants.edges.notNullMap { ProductVariantAdapter.adapt(it.node) }
             )
         } else {
             adapt(
@@ -60,7 +61,7 @@ object ProductAdapter {
             price = pricePair.first,
             hasAlternativePrice = pricePair.first != pricePair.second,
             images = productImages,
-            options = convertProductOptionList(productAdaptee.options),
+            options = ProductOptionListAdapter.adapt(productAdaptee.options),
             variants = variants,
             paginationValue = paginationValue
         )
@@ -69,7 +70,7 @@ object ProductAdapter {
     private fun convertPrice(productAdaptee: Storefront.Product): Pair<BigDecimal, BigDecimal> {
         val variantsList = productAdaptee.variants.edges
         return if (variantsList.size > 0) {
-            val mappedList = variantsList.mapNotNull { it.node.price }
+            val mappedList = variantsList.notNullMap { it.node.price }
             Pair(mappedList.min() ?: DEFAULT_PRICE, mappedList.max() ?: DEFAULT_PRICE)
         } else {
             Pair(DEFAULT_PRICE, DEFAULT_PRICE)
@@ -77,13 +78,6 @@ object ProductAdapter {
     }
 
     private fun convertImage(productAdaptee: Storefront.Product): List<Image> =
-        productAdaptee.images.edges.mapNotNull  { ImageAdapter.adapt(it.node)!! }
+        productAdaptee.images.edges.notNullMap { ImageAdapter.adapt(it.node)!! }
 
-    private fun convertProductOptionList(options: List<Storefront.ProductOption>?): List<ProductOption> {
-        return if (options != null) {
-            ProductOptionListAdapter.adapt(options)
-        } else {
-            listOf()
-        }
-    }
 }

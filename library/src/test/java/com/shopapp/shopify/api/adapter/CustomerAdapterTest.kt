@@ -1,7 +1,9 @@
 package com.shopapp.shopify.api.adapter
 
+import com.nhaarman.mockito_kotlin.given
 import com.shopapp.shopify.JodaTimeAndroidRule
 import com.shopapp.shopify.StorefrontMockInstantiator
+import com.shopapp.shopify.constant.Constant.DEFAULT_STRING
 import junit.framework.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -26,5 +28,26 @@ class CustomerAdapterTest {
         assertFalse(result.isAcceptsMarketing)
         assertNotNull(result.defaultAddress)
         assertNotNull(result.addressList.first())
+    }
+
+    @Test
+    fun shouldDefaultEmptyStringWhenFieldsIsNull() {
+        val customer = StorefrontMockInstantiator.newCustomer()
+        given(customer.firstName).willReturn(null)
+        given(customer.lastName).willReturn(null)
+        given(customer.phone).willReturn(null)
+        val result = CustomerAdapter.adapt(customer)
+
+        assertEquals(DEFAULT_STRING, result.firstName)
+        assertEquals(DEFAULT_STRING, result.lastName)
+        assertEquals(DEFAULT_STRING, result.phone)
+    }
+
+    @Test
+    fun shouldSetNullAddress() {
+        val customer = StorefrontMockInstantiator.newCustomer()
+        given(customer.defaultAddress).willReturn(null)
+        val result = CustomerAdapter.adapt(customer)
+        assertNull(result.defaultAddress)
     }
 }

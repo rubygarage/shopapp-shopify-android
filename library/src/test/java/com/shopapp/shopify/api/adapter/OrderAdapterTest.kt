@@ -1,9 +1,12 @@
 package com.shopapp.shopify.api.adapter
 
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.given
+import com.nhaarman.mockito_kotlin.mock
 import com.shopapp.shopify.JodaTimeAndroidRule
 import com.shopapp.shopify.StorefrontMockInstantiator
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import com.shopify.buy3.Storefront
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,9 +30,48 @@ class OrderAdapterTest {
         assertEquals(StorefrontMockInstantiator.DEFAULT_PRICE, result.totalPrice)
         assertEquals(StorefrontMockInstantiator.DEFAULT_PRICE, result.subtotalPrice)
         assertEquals(StorefrontMockInstantiator.DEFAULT_PRICE, result.totalShippingPrice)
-        assertNotNull(result.address)
         assertEquals(StorefrontMockInstantiator.DEFAULT_DATE.toDate(), result.processedAt)
         assertNotNull(result.orderProducts.first())
         assertEquals(paginationValue, result.paginationValue)
+    }
+
+    @Test
+    fun shouldAdaptAddress() {
+        val paginationValue = "pagination_value"
+        val result = OrderAdapter.adapt(StorefrontMockInstantiator.newOrder(), paginationValue)
+        assertNotNull(result.address)
+    }
+
+    @Test
+    fun shouldReturnNullAddress() {
+        val paginationValue = "pagination_value"
+        val order = StorefrontMockInstantiator.newOrder()
+        given(order.shippingAddress).willReturn(null)
+        val result = OrderAdapter.adapt(order, paginationValue)
+        assertNull(result.address)
+    }
+
+    @Test
+    fun shouldIgnoreNullProductItems() {
+        val paginationValue = "pagination_value"
+        val product: Storefront.OrderLineItem? = null
+        val productEdge: Storefront.OrderLineItemEdge = mock {
+            on { node } doReturn product
+        }
+
+        val products: MutableList<Storefront.OrderLineItemEdge?> = mutableListOf()
+        products.addAll(StorefrontMockInstantiator.newList(StorefrontMockInstantiator.newOrderLineItemEdge()))
+        products.add(productEdge)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE + 1, products.size)
+
+        val order = StorefrontMockInstantiator.newOrder()
+        val connection: Storefront.OrderLineItemConnection = mock {
+            on { edges } doReturn products
+        }
+        given(order.lineItems).willReturn(connection)
+
+        val result = OrderAdapter.adapt(order, paginationValue)
+        assertNotNull(result.orderProducts)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_LIST_SIZE, result.orderProducts.size)
     }
 }
