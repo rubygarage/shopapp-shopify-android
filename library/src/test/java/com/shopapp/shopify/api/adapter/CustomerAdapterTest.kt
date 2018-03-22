@@ -4,7 +4,7 @@ import com.nhaarman.mockito_kotlin.given
 import com.shopapp.shopify.JodaTimeAndroidRule
 import com.shopapp.shopify.StorefrontMockInstantiator
 import com.shopapp.shopify.constant.Constant.DEFAULT_STRING
-import junit.framework.Assert.*
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
