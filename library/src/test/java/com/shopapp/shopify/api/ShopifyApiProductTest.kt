@@ -5,7 +5,8 @@ import com.shopapp.gateway.ApiCallback
 import com.shopapp.gateway.entity.Error
 import com.shopapp.gateway.entity.Product
 import com.shopapp.shopify.StorefrontMockInstantiator
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ShopifyApiProductTest : BaseShopifyApiTest() {
@@ -28,8 +29,8 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertEquals(storefrontProduct.id.toString(), firstValue.id)
-            Assert.assertEquals(storefrontShop.paymentSettings.currencyCode.name, firstValue.currency)
+            assertEquals(storefrontProduct.id.toString(), firstValue.id)
+            assertEquals(storefrontShop.paymentSettings.currencyCode.name, firstValue.currency)
         }
     }
 
@@ -45,8 +46,8 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
-            Assert.assertTrue(firstValue is Error.NonCritical)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
         }
     }
 
@@ -61,7 +62,7 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -82,10 +83,10 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertTrue(firstValue.isNotEmpty())
+            assertTrue(firstValue.isNotEmpty())
             val product = firstValue.first()
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ID, product.id)
-            Assert.assertEquals(storefrontShop.paymentSettings.currencyCode.name, product.currency)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ID, product.id)
+            assertEquals(storefrontShop.paymentSettings.currencyCode.name, product.currency)
         }
     }
 
@@ -101,8 +102,8 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
-            Assert.assertTrue(firstValue is Error.NonCritical)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
         }
     }
 
@@ -117,7 +118,7 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -138,10 +139,10 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertTrue(firstValue.isNotEmpty())
+            assertTrue(firstValue.isNotEmpty())
             val product = firstValue.first()
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ID, product.id)
-            Assert.assertEquals(storefrontShop.paymentSettings.currencyCode.name, product.currency)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ID, product.id)
+            assertEquals(storefrontShop.paymentSettings.currencyCode.name, product.currency)
         }
     }
 
@@ -157,8 +158,8 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
-            Assert.assertTrue(firstValue is Error.NonCritical)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
         }
     }
 
@@ -173,7 +174,7 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 }

@@ -6,7 +6,8 @@ import com.shopapp.gateway.entity.Article
 import com.shopapp.gateway.entity.Error
 import com.shopapp.shopify.StorefrontMockInstantiator
 import com.shopify.buy3.Storefront
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ShopifyApiBlogTest : BaseShopifyApiTest() {
@@ -27,8 +28,8 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
             verify(callback, never()).onFailure(any())
 
             val (article, url) = firstValue
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ID, article.id)
-            Assert.assertEquals(BASE_URL, url)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ID, article.id)
+            assertEquals(BASE_URL, url)
         }
     }
 
@@ -44,8 +45,8 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
-            Assert.assertTrue(firstValue is Error.NonCritical)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
         }
     }
 
@@ -60,7 +61,7 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -84,8 +85,8 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertTrue(firstValue.isNotEmpty())
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ID, firstValue.first().id)
+            assertTrue(firstValue.isNotEmpty())
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ID, firstValue.first().id)
         }
     }
 
@@ -101,8 +102,8 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
-            Assert.assertTrue(firstValue is Error.NonCritical)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
         }
     }
 
@@ -117,7 +118,7 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 }

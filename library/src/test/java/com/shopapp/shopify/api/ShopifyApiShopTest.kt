@@ -5,7 +5,8 @@ import com.shopapp.gateway.ApiCallback
 import com.shopapp.gateway.entity.Error
 import com.shopapp.gateway.entity.Shop
 import com.shopapp.shopify.StorefrontMockInstantiator
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ShopifyApiShopTest : BaseShopifyApiTest() {
@@ -25,7 +26,7 @@ class ShopifyApiShopTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_SHOP_NAME, firstValue.name)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_SHOP_NAME, firstValue.name)
         }
     }
 
@@ -41,8 +42,8 @@ class ShopifyApiShopTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
-            Assert.assertTrue(firstValue is Error.NonCritical)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
         }
     }
 
@@ -57,7 +58,7 @@ class ShopifyApiShopTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 }

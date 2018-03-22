@@ -8,7 +8,8 @@ import com.shopify.buy3.CreditCardVaultCall
 import com.shopify.buy3.GraphCall
 import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
 import java.math.BigDecimal
@@ -32,7 +33,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertEquals(storefrontCheckout.id.toString(), firstValue.checkoutId)
+            assertEquals(storefrontCheckout.id.toString(), firstValue.checkoutId)
         }
     }
 
@@ -53,7 +54,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
         }
     }
 
@@ -69,7 +70,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -88,7 +89,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertEquals(storefrontCheckout.id.toString(), firstValue.checkoutId)
+            assertEquals(storefrontCheckout.id.toString(), firstValue.checkoutId)
         }
     }
 
@@ -104,8 +105,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
-            Assert.assertTrue(firstValue is Error.NonCritical)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
         }
     }
 
@@ -120,7 +121,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -142,7 +143,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertEquals(storefrontCheckout.id.toString(), firstValue.checkoutId)
+            assertEquals(storefrontCheckout.id.toString(), firstValue.checkoutId)
         }
     }
 
@@ -164,7 +165,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
         }
     }
 
@@ -181,7 +182,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -227,7 +228,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -249,7 +250,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertEquals(storefrontCheckout.id.toString(), firstValue.checkoutId)
+            assertEquals(storefrontCheckout.id.toString(), firstValue.checkoutId)
         }
     }
 
@@ -271,7 +272,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
         }
     }
 
@@ -288,7 +289,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -310,7 +311,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertTrue(firstValue.isNotEmpty())
+            assertTrue(firstValue.isNotEmpty())
         }
     }
 
@@ -326,8 +327,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
-            Assert.assertTrue(firstValue is Error.NonCritical)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
         }
     }
 
@@ -342,7 +343,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -373,7 +374,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertEquals(token, firstValue)
+            assertEquals(token, firstValue)
         }
     }
 
@@ -403,7 +404,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -420,8 +421,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
-            Assert.assertTrue(firstValue is Error.NonCritical)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
         }
     }
 
@@ -438,7 +439,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -473,7 +474,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback).onResult(capture())
             verify(callback, never()).onFailure(any())
 
-            Assert.assertEquals(storefrontCheckout.order.id.toString(), firstValue.id)
+            assertEquals(storefrontCheckout.order.id.toString(), firstValue.id)
         }
     }
 
@@ -506,7 +507,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 
@@ -528,7 +529,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
         }
     }
 
@@ -545,7 +546,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback, never()).onResult(any())
             verify(callback).onFailure(capture())
 
-            Assert.assertTrue(firstValue is Error.Content)
+            assertTrue(firstValue is Error.Content)
         }
     }
 }
