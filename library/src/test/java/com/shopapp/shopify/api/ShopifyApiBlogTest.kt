@@ -8,7 +8,6 @@ import com.shopapp.shopify.StorefrontMockInstantiator
 import com.shopify.buy3.Storefront
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.BDDMockito
 
 class ShopifyApiBlogTest : BaseShopifyApiTest() {
 
@@ -18,7 +17,7 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(graphResponse)
 
         val storefrontArticle = StorefrontMockInstantiator.newArticle()
-        BDDMockito.given(storefrontQueryRoot.node).willReturn(storefrontArticle)
+        given(storefrontQueryRoot.node).willReturn(storefrontArticle)
 
         val callback: ApiCallback<Pair<Article, String>> = mock()
         api.getArticle(StorefrontMockInstantiator.DEFAULT_ID, callback)
@@ -72,11 +71,11 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
 
         val storefrontArticleEdges = listOf(StorefrontMockInstantiator.newArticleEdge())
         val storefrontArticleConnection: Storefront.ArticleConnection = mock()
-        BDDMockito.given(storefrontArticleConnection.edges).willReturn(storefrontArticleEdges)
+        given(storefrontArticleConnection.edges).willReturn(storefrontArticleEdges)
 
         val storefrontShop = StorefrontMockInstantiator.newShop()
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
-        BDDMockito.given(storefrontShop.articles).willReturn(storefrontArticleConnection)
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(storefrontShop.articles).willReturn(storefrontArticleConnection)
 
         val callback: ApiCallback<List<Article>> = mock()
         api.getArticleList(any(), null, null, false, callback)

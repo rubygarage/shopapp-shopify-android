@@ -8,7 +8,6 @@ import com.shopapp.shopify.StorefrontMockInstantiator
 import com.shopapp.shopify.constant.Constant
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.BDDMockito
 
 class ShopifyApiOrderTest : BaseShopifyApiTest() {
 
@@ -19,8 +18,8 @@ class ShopifyApiOrderTest : BaseShopifyApiTest() {
 
         val storefrontOrderConnection = StorefrontMockInstantiator.newOrderConnection()
         val customer = StorefrontMockInstantiator.newCustomer()
-        BDDMockito.given(storefrontQueryRoot.customer).willReturn(customer)
-        BDDMockito.given(customer.orders).willReturn(storefrontOrderConnection)
+        given(storefrontQueryRoot.customer).willReturn(customer)
+        given(customer.orders).willReturn(storefrontOrderConnection)
 
         mockSession(true)
         val callback: ApiCallback<List<Order>> = mock()
@@ -89,7 +88,7 @@ class ShopifyApiOrderTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(graphResponse)
 
         val storefrontOrder = StorefrontMockInstantiator.newOrder()
-        BDDMockito.given(storefrontQueryRoot.node).willReturn(storefrontOrder)
+        given(storefrontQueryRoot.node).willReturn(storefrontOrder)
 
         val callback: ApiCallback<Order> = mock()
         api.getOrder(StorefrontMockInstantiator.DEFAULT_ID, callback)

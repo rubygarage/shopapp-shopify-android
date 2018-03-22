@@ -7,7 +7,6 @@ import com.shopapp.gateway.entity.Error
 import com.shopapp.shopify.StorefrontMockInstantiator
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.BDDMockito
 
 class ShopifyApiCategoryTest : BaseShopifyApiTest() {
 
@@ -17,9 +16,9 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(graphResponse)
 
         val storefrontCollection = StorefrontMockInstantiator.newCollection()
-        BDDMockito.given(storefrontQueryRoot.node).willReturn(storefrontCollection)
+        given(storefrontQueryRoot.node).willReturn(storefrontCollection)
         val storefrontShop = StorefrontMockInstantiator.newShop()
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<Category> = mock()
         api.getCategoryDetails(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
@@ -71,7 +70,7 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(graphResponse)
 
         val storefrontShop = StorefrontMockInstantiator.newShop()
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<List<Category>> = mock()
         api.getCategoryList(any(), null, callback)

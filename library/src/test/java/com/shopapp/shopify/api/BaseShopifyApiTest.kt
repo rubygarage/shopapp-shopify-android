@@ -2,10 +2,7 @@ package com.shopapp.shopify.api
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.anyOrNull
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.*
 import com.shopapp.gateway.entity.Address
 import com.shopapp.gateway.entity.Card
 import com.shopapp.gateway.entity.Checkout
@@ -16,7 +13,6 @@ import com.shopify.buy3.*
 import org.joda.time.DateTime
 import org.junit.Before
 import org.junit.Rule
-import org.mockito.BDDMockito
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import retrofit2.Retrofit
@@ -60,18 +56,18 @@ abstract class BaseShopifyApiTest {
     }
 
     protected fun mockSharedPreferences() {
-        BDDMockito.given(context.getSharedPreferences(any(), any())).willReturn(sharedPreferences)
+        given(context.getSharedPreferences(any(), any())).willReturn(sharedPreferences)
         val editor: SharedPreferences.Editor = mock()
-        BDDMockito.given(sharedPreferences.edit()).willReturn(editor)
-        BDDMockito.given(editor.putString(any(), any())).willReturn(editor)
-        BDDMockito.given(editor.putLong(any(), any())).willReturn(editor)
-        BDDMockito.given(editor.remove(any())).willReturn(editor)
+        given(sharedPreferences.edit()).willReturn(editor)
+        given(editor.putString(any(), any())).willReturn(editor)
+        given(editor.putLong(any(), any())).willReturn(editor)
+        given(editor.remove(any())).willReturn(editor)
     }
 
     protected fun mockSession(isSessionValid: Boolean) {
-        BDDMockito.given(sharedPreferences.getString(any(), anyOrNull()))
+        given(sharedPreferences.getString(any(), anyOrNull()))
             .willReturn(if (isSessionValid) "data" else null)
-        BDDMockito.given(sharedPreferences.getLong(any(), any()))
+        given(sharedPreferences.getLong(any(), any()))
             .willReturn(if (isSessionValid) System.currentTimeMillis() * 2 else 0)
     }
 
@@ -80,16 +76,16 @@ abstract class BaseShopifyApiTest {
         mutationGraphCall: MutationGraphCall,
         storefrontMutation: Storefront.Mutation
     ) {
-        BDDMockito.given(mutationGraphCall.execute()).willReturn(graphResponse)
+        given(mutationGraphCall.execute()).willReturn(graphResponse)
 
         val customerAccessToken: Storefront.CustomerAccessToken = mock()
-        BDDMockito.given(customerAccessToken.accessToken).willReturn("123")
-        BDDMockito.given(customerAccessToken.expiresAt).willReturn(DateTime())
+        given(customerAccessToken.accessToken).willReturn("123")
+        given(customerAccessToken.expiresAt).willReturn(DateTime())
 
         val customerAccessTokenCreatePayload: Storefront.CustomerAccessTokenCreatePayload = mock()
-        BDDMockito.given(customerAccessTokenCreatePayload.customerAccessToken).willReturn(customerAccessToken)
-        BDDMockito.given(storefrontMutation.customerAccessTokenCreate).willReturn(customerAccessTokenCreatePayload)
-        BDDMockito.given(graphResponse.data()).willReturn(storefrontMutation)
+        given(customerAccessTokenCreatePayload.customerAccessToken).willReturn(customerAccessToken)
+        given(storefrontMutation.customerAccessTokenCreate).willReturn(customerAccessTokenCreatePayload)
+        given(graphResponse.data()).willReturn(storefrontMutation)
     }
 
     protected fun mockFailureRequestToken(
@@ -97,21 +93,21 @@ abstract class BaseShopifyApiTest {
         mutationGraphCall: MutationGraphCall,
         storefrontMutation: Storefront.Mutation
     ) {
-        BDDMockito.given(mutationGraphCall.execute()).willReturn(graphResponse)
+        given(mutationGraphCall.execute()).willReturn(graphResponse)
 
         val userError = StorefrontMockInstantiator.newUserError()
 
         val customerAccessTokenCreatePayload: Storefront.CustomerAccessTokenCreatePayload = mock()
-        BDDMockito.given(customerAccessTokenCreatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.customerAccessTokenCreate).willReturn(customerAccessTokenCreatePayload)
-        BDDMockito.given(graphResponse.data()).willReturn(storefrontMutation)
+        given(customerAccessTokenCreatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.customerAccessTokenCreate).willReturn(customerAccessTokenCreatePayload)
+        given(graphResponse.data()).willReturn(storefrontMutation)
     }
 
     protected fun mockMutationGraphCallWithOnResponse(response: GraphResponse<Storefront.Mutation>): MutationGraphCall {
         val mutationGraphCall: MutationGraphCall = mock()
-        BDDMockito.given(graphClient.mutateGraph(any())).willReturn(mutationGraphCall)
+        given(graphClient.mutateGraph(any())).willReturn(mutationGraphCall)
 
-        BDDMockito.given(mutationGraphCall.enqueue(any())).willAnswer({
+        given(mutationGraphCall.enqueue(any())).willAnswer({
             val graphCallback = it.getArgument<GraphCall.Callback<Storefront.Mutation>>(0)
             graphCallback.onResponse(response)
             mutationGraphCall
@@ -122,9 +118,9 @@ abstract class BaseShopifyApiTest {
 
     protected fun mockMutationGraphCallWithOnFailure(): MutationGraphCall {
         val mutationGraphCall: MutationGraphCall = mock()
-        BDDMockito.given(graphClient.mutateGraph(any())).willReturn(mutationGraphCall)
+        given(graphClient.mutateGraph(any())).willReturn(mutationGraphCall)
 
-        BDDMockito.given(mutationGraphCall.enqueue(any())).willAnswer({
+        given(mutationGraphCall.enqueue(any())).willAnswer({
             val graphCallback = it.getArgument<GraphCall.Callback<Storefront.Mutation>>(0)
             graphCallback.onFailure(StorefrontMockInstantiator.newGraphError())
             mutationGraphCall
@@ -135,9 +131,9 @@ abstract class BaseShopifyApiTest {
 
     protected fun mockQueryGraphCallWithOnResponse(response: GraphResponse<Storefront.QueryRoot>): QueryGraphCall {
         val queryGraphCall: QueryGraphCall = mock()
-        BDDMockito.given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
+        given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
 
-        BDDMockito.given(queryGraphCall.enqueue(any())).willAnswer({
+        given(queryGraphCall.enqueue(any())).willAnswer({
             val graphCallback = it.getArgument<GraphCall.Callback<Storefront.QueryRoot>>(0)
             graphCallback.onResponse(response)
             queryGraphCall
@@ -148,9 +144,9 @@ abstract class BaseShopifyApiTest {
 
     protected fun mockQueryGraphCallWithOnFailure() {
         val queryGraphCall: QueryGraphCall = mock()
-        BDDMockito.given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
+        given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
 
-        BDDMockito.given(queryGraphCall.enqueue(any())).willAnswer({
+        given(queryGraphCall.enqueue(any())).willAnswer({
             val graphCallback = it.getArgument<GraphCall.Callback<Storefront.QueryRoot>>(0)
             graphCallback.onFailure(StorefrontMockInstantiator.newGraphError())
             queryGraphCall
@@ -160,14 +156,14 @@ abstract class BaseShopifyApiTest {
     protected fun mockMutationDataResponse(): Pair<GraphResponse<Storefront.Mutation>, Storefront.Mutation> {
         val graphResponse: GraphResponse<Storefront.Mutation> = mock()
         val storefrontQueryRoot: Storefront.Mutation = mock()
-        BDDMockito.given(graphResponse.data()).willReturn(storefrontQueryRoot)
+        given(graphResponse.data()).willReturn(storefrontQueryRoot)
         return graphResponse to storefrontQueryRoot
     }
 
     protected fun mockDataResponse(): Pair<GraphResponse<Storefront.QueryRoot>, Storefront.QueryRoot> {
         val graphResponse: GraphResponse<Storefront.QueryRoot> = mock()
         val storefrontQueryRoot: Storefront.QueryRoot = mock()
-        BDDMockito.given(graphResponse.data()).willReturn(storefrontQueryRoot)
+        given(graphResponse.data()).willReturn(storefrontQueryRoot)
         return graphResponse to storefrontQueryRoot
     }
 
@@ -176,7 +172,7 @@ abstract class BaseShopifyApiTest {
             on { message() }.doReturn(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE)
         }
         val graphResponse: GraphResponse<Storefront.QueryRoot> = mock()
-        BDDMockito.given(graphResponse.errors()).willReturn(listOf(error))
+        given(graphResponse.errors()).willReturn(listOf(error))
         return graphResponse
     }
 

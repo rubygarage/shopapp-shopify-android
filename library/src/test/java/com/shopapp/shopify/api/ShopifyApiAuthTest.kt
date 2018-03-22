@@ -15,7 +15,6 @@ import com.shopify.buy3.Storefront
 import okhttp3.ResponseBody
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.BDDMockito
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,10 +27,10 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         val mutationGraphCall = mockMutationGraphCallWithOnResponse(graphResponse)
 
         val customerCreatePayload: Storefront.CustomerCreatePayload = mock()
-        BDDMockito.given(storefrontMutation.customerCreate).willReturn(customerCreatePayload)
+        given(storefrontMutation.customerCreate).willReturn(customerCreatePayload)
 
         val customer = StorefrontMockInstantiator.newCustomer()
-        BDDMockito.given(customerCreatePayload.customer).willReturn(customer)
+        given(customerCreatePayload.customer).willReturn(customer)
 
         mockSuccessRequestToken(graphResponse, mutationGraphCall, storefrontMutation)
         val callback: ApiCallback<Unit> = mock()
@@ -47,10 +46,10 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         val mutationGraphCall = mockMutationGraphCallWithOnResponse(graphResponse)
 
         val customerCreatePayload: Storefront.CustomerCreatePayload = mock()
-        BDDMockito.given(storefrontMutation.customerCreate).willReturn(customerCreatePayload)
+        given(storefrontMutation.customerCreate).willReturn(customerCreatePayload)
 
         val customer = StorefrontMockInstantiator.newCustomer()
-        BDDMockito.given(customerCreatePayload.customer).willReturn(customer)
+        given(customerCreatePayload.customer).willReturn(customer)
 
         mockFailureRequestToken(graphResponse, mutationGraphCall, storefrontMutation)
         val callback: ApiCallback<Unit> = mock()
@@ -71,14 +70,14 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockMutationGraphCallWithOnResponse(graphResponse)
 
         val customerCreatePayload: Storefront.CustomerCreatePayload = mock()
-        BDDMockito.given(storefrontMutation.customerCreate).willReturn(customerCreatePayload)
+        given(storefrontMutation.customerCreate).willReturn(customerCreatePayload)
 
         val customer = StorefrontMockInstantiator.newCustomer()
-        BDDMockito.given(customerCreatePayload.customer).willReturn(customer)
+        given(customerCreatePayload.customer).willReturn(customer)
 
         val userError: com.shopify.graphql.support.Error = mock()
-        BDDMockito.given(userError.message()).willReturn(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE)
-        BDDMockito.given(graphResponse.errors()).willReturn(listOf(userError))
+        given(userError.message()).willReturn(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE)
+        given(graphResponse.errors()).willReturn(listOf(userError))
 
         val callback: ApiCallback<Unit> = mock()
         api.signUp("", "", "", "", "", callback)
@@ -98,10 +97,10 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockMutationGraphCallWithOnFailure()
 
         val customerCreatePayload: Storefront.CustomerCreatePayload = mock()
-        BDDMockito.given(storefrontMutation.customerCreate).willReturn(customerCreatePayload)
+        given(storefrontMutation.customerCreate).willReturn(customerCreatePayload)
 
         val customer = StorefrontMockInstantiator.newCustomer()
-        BDDMockito.given(customerCreatePayload.customer).willReturn(customer)
+        given(customerCreatePayload.customer).willReturn(customer)
 
         val callback: ApiCallback<Unit> = mock()
         api.signUp("", "", "", "", "", callback)
@@ -150,8 +149,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         val (graphResponse, _) = mockMutationDataResponse()
         val mutationGraphCall = mockMutationGraphCallWithOnResponse(graphResponse)
 
-        BDDMockito.given(mutationGraphCall.execute()).willReturn(graphResponse)
-        BDDMockito.given(graphResponse.data()).willReturn(null)
+        given(mutationGraphCall.execute()).willReturn(graphResponse)
+        given(graphResponse.data()).willReturn(null)
         val callback: ApiCallback<Unit> = mock()
         api.signIn("", "", callback)
 
@@ -209,8 +208,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockMutationGraphCallWithOnResponse(graphResponse)
 
         val userError: com.shopify.graphql.support.Error = mock()
-        BDDMockito.given(userError.message()).willReturn(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE)
-        BDDMockito.given(graphResponse.errors()).willReturn(listOf(userError))
+        given(userError.message()).willReturn(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE)
+        given(graphResponse.errors()).willReturn(listOf(userError))
 
         val callback: ApiCallback<Unit> = mock()
         api.forgotPassword("", callback)
@@ -232,8 +231,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         val userError = StorefrontMockInstantiator.newUserError()
 
         val customerRecoverPayload: Storefront.CustomerRecoverPayload = mock()
-        BDDMockito.given(customerRecoverPayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(graphResponse.data()?.customerRecover).willReturn(customerRecoverPayload)
+        given(customerRecoverPayload.userErrors).willReturn(listOf(userError))
+        given(graphResponse.data()?.customerRecover).willReturn(customerRecoverPayload)
 
         val callback: ApiCallback<Unit> = mock()
         api.forgotPassword("", callback)
@@ -269,7 +268,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(graphResponse)
 
         val customer = StorefrontMockInstantiator.newCustomer()
-        BDDMockito.given(storefrontQueryRoot.customer).willReturn(customer)
+        given(storefrontQueryRoot.customer).willReturn(customer)
 
         mockSession(true)
         val callback: ApiCallback<Customer?> = mock()
@@ -340,8 +339,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val storefrontAddress = StorefrontMockInstantiator.newAddress()
         val customerAddressCreatePayload: Storefront.CustomerAddressCreatePayload = mock()
-        BDDMockito.given(customerAddressCreatePayload.customerAddress).willReturn(storefrontAddress)
-        BDDMockito.given(storefrontMutation.customerAddressCreate).willReturn(customerAddressCreatePayload)
+        given(customerAddressCreatePayload.customerAddress).willReturn(storefrontAddress)
+        given(storefrontMutation.customerAddressCreate).willReturn(customerAddressCreatePayload)
 
         mockSession(true)
         val address = stubAddress()
@@ -363,8 +362,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val customerAddressCreatePayload: Storefront.CustomerAddressCreatePayload = mock()
-        BDDMockito.given(customerAddressCreatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.customerAddressCreate).willReturn(customerAddressCreatePayload)
+        given(customerAddressCreatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.customerAddressCreate).willReturn(customerAddressCreatePayload)
 
         mockSession(true)
         val address = stubAddress()
@@ -420,8 +419,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val storefrontAddress = StorefrontMockInstantiator.newAddress()
         val customerAddressUpdatePayload: Storefront.CustomerAddressUpdatePayload = mock()
-        BDDMockito.given(customerAddressUpdatePayload.customerAddress).willReturn(storefrontAddress)
-        BDDMockito.given(storefrontMutation.customerAddressUpdate).willReturn(customerAddressUpdatePayload)
+        given(customerAddressUpdatePayload.customerAddress).willReturn(storefrontAddress)
+        given(storefrontMutation.customerAddressUpdate).willReturn(customerAddressUpdatePayload)
 
         mockSession(true)
         val address = stubAddress()
@@ -439,8 +438,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val customerAddressUpdatePayload: Storefront.CustomerAddressUpdatePayload = mock()
-        BDDMockito.given(customerAddressUpdatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.customerAddressUpdate).willReturn(customerAddressUpdatePayload)
+        given(customerAddressUpdatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.customerAddressUpdate).willReturn(customerAddressUpdatePayload)
 
         mockSession(true)
         val address = stubAddress()
@@ -495,8 +494,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockMutationGraphCallWithOnResponse(graphResponse)
 
         val customerAddressDeletePayload: Storefront.CustomerAddressDeletePayload = mock()
-        BDDMockito.given(customerAddressDeletePayload.deletedCustomerAddressId).willReturn(StorefrontMockInstantiator.DEFAULT_ID)
-        BDDMockito.given(storefrontMutation.customerAddressDelete).willReturn(customerAddressDeletePayload)
+        given(customerAddressDeletePayload.deletedCustomerAddressId).willReturn(StorefrontMockInstantiator.DEFAULT_ID)
+        given(storefrontMutation.customerAddressDelete).willReturn(customerAddressDeletePayload)
 
         mockSession(true)
         val callback: ApiCallback<Unit> = mock()
@@ -513,8 +512,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val customerAddressDeletePayload: Storefront.CustomerAddressDeletePayload = mock()
-        BDDMockito.given(customerAddressDeletePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.customerAddressDelete).willReturn(customerAddressDeletePayload)
+        given(customerAddressDeletePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.customerAddressDelete).willReturn(customerAddressDeletePayload)
 
         mockSession(true)
         val callback: ApiCallback<Unit> = mock()
@@ -566,7 +565,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockMutationGraphCallWithOnResponse(graphResponse)
 
         val customerDefaultAddressUpdatePayload: Storefront.CustomerDefaultAddressUpdatePayload = mock()
-        BDDMockito.given(storefrontMutation.customerDefaultAddressUpdate).willReturn(customerDefaultAddressUpdatePayload)
+        given(storefrontMutation.customerDefaultAddressUpdate).willReturn(customerDefaultAddressUpdatePayload)
 
         mockSession(true)
         val callback: ApiCallback<Unit> = mock()
@@ -583,8 +582,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val customerDefaultAddressUpdatePayload: Storefront.CustomerDefaultAddressUpdatePayload = mock()
-        BDDMockito.given(customerDefaultAddressUpdatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.customerDefaultAddressUpdate).willReturn(customerDefaultAddressUpdatePayload)
+        given(customerDefaultAddressUpdatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.customerDefaultAddressUpdate).willReturn(customerDefaultAddressUpdatePayload)
 
         mockSession(true)
         val callback: ApiCallback<Unit> = mock()
@@ -637,8 +636,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val storefrontCustomer = StorefrontMockInstantiator.newCustomer()
         val customerUpdatePayload: Storefront.CustomerUpdatePayload = mock()
-        BDDMockito.given(customerUpdatePayload.customer).willReturn(storefrontCustomer)
-        BDDMockito.given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
+        given(customerUpdatePayload.customer).willReturn(storefrontCustomer)
+        given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
 
         mockSession(true)
         val callback: ApiCallback<Customer> = mock()
@@ -659,8 +658,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val customerUpdatePayload: Storefront.CustomerUpdatePayload = mock()
-        BDDMockito.given(customerUpdatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
+        given(customerUpdatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
 
         mockSession(true)
         val callback: ApiCallback<Customer> = mock()
@@ -713,8 +712,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val storefrontCustomer = StorefrontMockInstantiator.newCustomer()
         val customerUpdatePayload: Storefront.CustomerUpdatePayload = mock()
-        BDDMockito.given(customerUpdatePayload.customer).willReturn(storefrontCustomer)
-        BDDMockito.given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
+        given(customerUpdatePayload.customer).willReturn(storefrontCustomer)
+        given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
 
         mockSession(true)
         mockSuccessRequestToken(graphResponse, mutationGraphCall, storefrontMutation)
@@ -732,8 +731,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val storefrontCustomer = StorefrontMockInstantiator.newCustomer()
         val customerUpdatePayload: Storefront.CustomerUpdatePayload = mock()
-        BDDMockito.given(customerUpdatePayload.customer).willReturn(storefrontCustomer)
-        BDDMockito.given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
+        given(customerUpdatePayload.customer).willReturn(storefrontCustomer)
+        given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
 
         mockSession(true)
         mockFailureRequestToken(graphResponse, mutationGraphCall, storefrontMutation)
@@ -755,8 +754,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val customerUpdatePayload: Storefront.CustomerUpdatePayload = mock()
-        BDDMockito.given(customerUpdatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
+        given(customerUpdatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
 
         mockSession(true)
         mockSuccessRequestToken(graphResponse, mutationGraphCall, storefrontMutation)
@@ -807,16 +806,16 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
     fun getCountriesShouldReturnCountriesListFromApi() {
         val countriesService: CountriesService = mock()
         val call: Call<ApiCountryResponse> = mock()
-        BDDMockito.given(countriesService.getCountries()).willReturn(call)
-        BDDMockito.given(retrofit.create(CountriesService::class.java)).willReturn(countriesService)
+        given(countriesService.getCountries()).willReturn(call)
+        given(retrofit.create(CountriesService::class.java)).willReturn(countriesService)
 
         val response: Response<ApiCountryResponse> = mock()
-        BDDMockito.given(response.isSuccessful).willReturn(true)
+        given(response.isSuccessful).willReturn(true)
         val apiCountry = ApiCountry(123, "code", "name", listOf())
         val apiResponse = ApiCountryResponse(listOf(apiCountry))
-        BDDMockito.given(response.body()).willReturn(apiResponse)
+        given(response.body()).willReturn(apiResponse)
 
-        BDDMockito.given(call.enqueue(any())).willAnswer({
+        given(call.enqueue(any())).willAnswer({
             val callback = it.getArgument<Callback<ApiCountryResponse>>(0)
             callback.onResponse(call, response)
         })
@@ -836,23 +835,23 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
     fun getCountriesShouldReturnCountriesListFromJson() {
         val countriesService: CountriesService = mock()
         val call: Call<ApiCountryResponse> = mock()
-        BDDMockito.given(countriesService.getCountries()).willReturn(call)
-        BDDMockito.given(retrofit.create(CountriesService::class.java)).willReturn(countriesService)
+        given(countriesService.getCountries()).willReturn(call)
+        given(retrofit.create(CountriesService::class.java)).willReturn(countriesService)
 
         val response: Response<ApiCountryResponse> = mock()
-        BDDMockito.given(response.isSuccessful).willReturn(true)
+        given(response.isSuccessful).willReturn(true)
         val apiCountry = ApiCountry(123, "code", Constant.REST_OF_WORLD, listOf())
         val apiResponse = ApiCountryResponse(listOf(apiCountry))
-        BDDMockito.given(response.body()).willReturn(apiResponse)
+        given(response.body()).willReturn(apiResponse)
 
-        BDDMockito.given(call.enqueue(any())).willAnswer({
+        given(call.enqueue(any())).willAnswer({
             val callback = it.getArgument<Callback<ApiCountryResponse>>(0)
             callback.onResponse(call, response)
         })
 
         val countryId = 38097911857L
         val countryName = "Afghanistan"
-        BDDMockito.given(assetsReader.read(any(), any())).willReturn("[\n" +
+        given(assetsReader.read(any(), any())).willReturn("[\n" +
                 "  {\n" +
                 "    \"id\": $countryId,\n" +
                 "    \"name\": \"$countryName\",\n" +
@@ -880,15 +879,15 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
     fun getCountriesShouldReturnContentErrorWhenResponseIsNotSuccessful() {
         val countriesService: CountriesService = mock()
         val call: Call<ApiCountryResponse> = mock()
-        BDDMockito.given(countriesService.getCountries()).willReturn(call)
-        BDDMockito.given(retrofit.create(CountriesService::class.java)).willReturn(countriesService)
+        given(countriesService.getCountries()).willReturn(call)
+        given(retrofit.create(CountriesService::class.java)).willReturn(countriesService)
 
         val response: Response<ApiCountryResponse> = mock()
-        BDDMockito.given(response.isSuccessful).willReturn(false)
+        given(response.isSuccessful).willReturn(false)
         val responseBody: ResponseBody = mock()
-        BDDMockito.given(response.errorBody()).willReturn(responseBody)
+        given(response.errorBody()).willReturn(responseBody)
 
-        BDDMockito.given(call.enqueue(any())).willAnswer({
+        given(call.enqueue(any())).willAnswer({
             val callback = it.getArgument<Callback<ApiCountryResponse>>(0)
             callback.onResponse(call, response)
         })
@@ -908,10 +907,10 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
     fun getCountriesShouldReturnContentError() {
         val countriesService: CountriesService = mock()
         val call: Call<ApiCountryResponse> = mock()
-        BDDMockito.given(countriesService.getCountries()).willReturn(call)
-        BDDMockito.given(retrofit.create(CountriesService::class.java)).willReturn(countriesService)
+        given(countriesService.getCountries()).willReturn(call)
+        given(retrofit.create(CountriesService::class.java)).willReturn(countriesService)
 
-        BDDMockito.given(call.enqueue(any())).willAnswer({
+        given(call.enqueue(any())).willAnswer({
             val callback = it.getArgument<Callback<ApiCountryResponse>>(0)
             callback.onFailure(call, Throwable())
         })
@@ -934,8 +933,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val storefrontCustomer = StorefrontMockInstantiator.newCustomer()
         val customerUpdatePayload: Storefront.CustomerUpdatePayload = mock()
-        BDDMockito.given(customerUpdatePayload.customer).willReturn(storefrontCustomer)
-        BDDMockito.given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
+        given(customerUpdatePayload.customer).willReturn(storefrontCustomer)
+        given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
 
         mockSession(true)
         val callback: ApiCallback<Unit> = mock()
@@ -952,8 +951,8 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val customerUpdatePayload: Storefront.CustomerUpdatePayload = mock()
-        BDDMockito.given(customerUpdatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
+        given(customerUpdatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.customerUpdate).willReturn(customerUpdatePayload)
 
         mockSession(true)
         val callback: ApiCallback<Unit> = mock()

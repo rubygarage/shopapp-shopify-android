@@ -7,7 +7,6 @@ import com.shopapp.gateway.entity.Shop
 import com.shopapp.shopify.StorefrontMockInstantiator
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.BDDMockito
 
 class ShopifyApiShopTest : BaseShopifyApiTest() {
 
@@ -17,7 +16,7 @@ class ShopifyApiShopTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(graphResponse)
 
         val storefrontShop = StorefrontMockInstantiator.newShop()
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<Shop> = mock()
         api.getShopInfo(callback)

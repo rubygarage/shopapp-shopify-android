@@ -10,7 +10,6 @@ import com.shopify.buy3.QueryGraphCall
 import com.shopify.buy3.Storefront
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.BDDMockito
 import java.io.IOException
 import java.math.BigDecimal
 
@@ -23,8 +22,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val storefrontCheckout = StorefrontMockInstantiator.newCheckout()
         val checkoutCreatePayload: Storefront.CheckoutCreatePayload = mock()
-        BDDMockito.given(checkoutCreatePayload.checkout).willReturn(storefrontCheckout)
-        BDDMockito.given(storefrontMutation.checkoutCreate).willReturn(checkoutCreatePayload)
+        given(checkoutCreatePayload.checkout).willReturn(storefrontCheckout)
+        given(storefrontMutation.checkoutCreate).willReturn(checkoutCreatePayload)
 
         val callback: ApiCallback<Checkout> = mock()
         api.createCheckout(listOf(), callback)
@@ -44,8 +43,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val checkoutCreatePayload: Storefront.CheckoutCreatePayload = mock()
-        BDDMockito.given(checkoutCreatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.checkoutCreate).willReturn(checkoutCreatePayload)
+        given(checkoutCreatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.checkoutCreate).willReturn(checkoutCreatePayload)
 
         val callback: ApiCallback<Checkout> = mock()
         api.createCheckout(listOf(), callback)
@@ -80,7 +79,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(graphResponse)
 
         val storefrontCheckout = StorefrontMockInstantiator.newCheckout()
-        BDDMockito.given(storefrontQueryRoot.node).willReturn(storefrontCheckout)
+        given(storefrontQueryRoot.node).willReturn(storefrontCheckout)
 
         val callback: ApiCallback<Checkout> = mock()
         api.getCheckout(StorefrontMockInstantiator.DEFAULT_ID, callback)
@@ -132,8 +131,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val storefrontCheckout = StorefrontMockInstantiator.newCheckout()
         val checkoutShippingAddressUpdatePayload: Storefront.CheckoutShippingAddressUpdatePayload = mock()
-        BDDMockito.given(checkoutShippingAddressUpdatePayload.checkout).willReturn(storefrontCheckout)
-        BDDMockito.given(storefrontMutation.checkoutShippingAddressUpdate).willReturn(checkoutShippingAddressUpdatePayload)
+        given(checkoutShippingAddressUpdatePayload.checkout).willReturn(storefrontCheckout)
+        given(storefrontMutation.checkoutShippingAddressUpdate).willReturn(checkoutShippingAddressUpdatePayload)
 
         val address = stubAddress()
         val callback: ApiCallback<Checkout> = mock()
@@ -154,8 +153,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val checkoutCreatePayload: Storefront.CheckoutShippingAddressUpdatePayload = mock()
-        BDDMockito.given(checkoutCreatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.checkoutShippingAddressUpdate).willReturn(checkoutCreatePayload)
+        given(checkoutCreatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.checkoutShippingAddressUpdate).willReturn(checkoutCreatePayload)
 
         val address = stubAddress()
         val callback: ApiCallback<Checkout> = mock()
@@ -190,16 +189,16 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
     fun getShippingRatesShouldReturnShippingRates() {
         val (graphResponse, storefrontQueryRoot) = mockDataResponse()
         val queryGraphCall: QueryGraphCall = mock()
-        BDDMockito.given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
+        given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
 
-        BDDMockito.given(queryGraphCall.enqueue(any(), anyOrNull(), any())).willAnswer({
+        given(queryGraphCall.enqueue(any(), anyOrNull(), any())).willAnswer({
             val graphCallback = it.getArgument<GraphCall.Callback<Storefront.QueryRoot>>(0)
             graphCallback.onResponse(graphResponse)
             queryGraphCall
         })
 
         val storefrontCheckout = StorefrontMockInstantiator.newCheckout()
-        BDDMockito.given(storefrontQueryRoot.node).willReturn(storefrontCheckout)
+        given(storefrontQueryRoot.node).willReturn(storefrontCheckout)
 
         val callback: ApiCallback<List<ShippingRate>> = mock()
         api.getShippingRates(StorefrontMockInstantiator.DEFAULT_ID, callback)
@@ -213,9 +212,9 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
     @Test
     fun getShippingRatesShouldReturnContentError() {
         val queryGraphCall: QueryGraphCall = mock()
-        BDDMockito.given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
+        given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
 
-        BDDMockito.given(queryGraphCall.enqueue(any(), anyOrNull(), anyOrNull())).willAnswer({
+        given(queryGraphCall.enqueue(any(), anyOrNull(), anyOrNull())).willAnswer({
             val graphCallback = it.getArgument<GraphCall.Callback<Storefront.QueryRoot>>(0)
             graphCallback.onFailure(StorefrontMockInstantiator.newGraphError())
             queryGraphCall
@@ -239,8 +238,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val storefrontCheckout = StorefrontMockInstantiator.newCheckout()
         val checkoutShippingLineUpdatePayload: Storefront.CheckoutShippingLineUpdatePayload = mock()
-        BDDMockito.given(checkoutShippingLineUpdatePayload.checkout).willReturn(storefrontCheckout)
-        BDDMockito.given(storefrontMutation.checkoutShippingLineUpdate).willReturn(checkoutShippingLineUpdatePayload)
+        given(checkoutShippingLineUpdatePayload.checkout).willReturn(storefrontCheckout)
+        given(storefrontMutation.checkoutShippingLineUpdate).willReturn(checkoutShippingLineUpdatePayload)
 
         val shippingRate = ShippingRate("title", BigDecimal.ZERO, "handle")
         val callback: ApiCallback<Checkout> = mock()
@@ -261,8 +260,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val checkoutShippingLineUpdatePayload: Storefront.CheckoutShippingLineUpdatePayload = mock()
-        BDDMockito.given(checkoutShippingLineUpdatePayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.checkoutShippingLineUpdate).willReturn(checkoutShippingLineUpdatePayload)
+        given(checkoutShippingLineUpdatePayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.checkoutShippingLineUpdate).willReturn(checkoutShippingLineUpdatePayload)
 
         val shippingRate = ShippingRate("title", BigDecimal.ZERO, "handle")
         val callback: ApiCallback<Checkout> = mock()
@@ -301,8 +300,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
         val storefrontCardBrand: Storefront.CardBrand = mock()
         val storefrontShop = StorefrontMockInstantiator.newShop()
         val paymentSettings = storefrontShop.paymentSettings
-        BDDMockito.given(paymentSettings.acceptedCardBrands).willReturn(listOf(storefrontCardBrand))
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(paymentSettings.acceptedCardBrands).willReturn(listOf(storefrontCardBrand))
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<List<CardType>> = mock()
         api.getAcceptedCardTypes(callback)
@@ -354,17 +353,17 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val storefrontShop = StorefrontMockInstantiator.newShop()
         val paymentSettings = storefrontShop.paymentSettings
-        BDDMockito.given(paymentSettings.cardVaultUrl).willReturn("url")
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(paymentSettings.cardVaultUrl).willReturn("url")
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val token = "test token"
         val creditCardVaultCall: CreditCardVaultCall = mock()
-        BDDMockito.given(creditCardVaultCall.enqueue(any())).willAnswer({
+        given(creditCardVaultCall.enqueue(any())).willAnswer({
             val graphCallback = it.getArgument<CreditCardVaultCall.Callback>(0)
             graphCallback.onResponse(token)
             creditCardVaultCall
         })
-        BDDMockito.given(cardClient.vault(any(), any())).willReturn(creditCardVaultCall)
+        given(cardClient.vault(any(), any())).willReturn(creditCardVaultCall)
 
         val card = stubCard()
         val callback: ApiCallback<String> = mock()
@@ -385,16 +384,16 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val storefrontShop = StorefrontMockInstantiator.newShop()
         val paymentSettings = storefrontShop.paymentSettings
-        BDDMockito.given(paymentSettings.cardVaultUrl).willReturn("url")
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(paymentSettings.cardVaultUrl).willReturn("url")
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val creditCardVaultCall: CreditCardVaultCall = mock()
-        BDDMockito.given(creditCardVaultCall.enqueue(any())).willAnswer({
+        given(creditCardVaultCall.enqueue(any())).willAnswer({
             val graphCallback = it.getArgument<CreditCardVaultCall.Callback>(0)
             graphCallback.onFailure(IOException())
             creditCardVaultCall
         })
-        BDDMockito.given(cardClient.vault(any(), any())).willReturn(creditCardVaultCall)
+        given(cardClient.vault(any(), any())).willReturn(creditCardVaultCall)
 
         val card = stubCard()
         val callback: ApiCallback<String> = mock()
@@ -449,22 +448,22 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
         mockMutationGraphCallWithOnResponse(graphResponse)
 
         val storefrontCheckout = StorefrontMockInstantiator.newCheckout()
-        BDDMockito.given(storefrontCheckout.ready).willReturn(true)
+        given(storefrontCheckout.ready).willReturn(true)
         val checkoutCompleteWithCreditCardPayload: Storefront.CheckoutCompleteWithCreditCardPayload = mock()
-        BDDMockito.given(checkoutCompleteWithCreditCardPayload.checkout).willReturn(storefrontCheckout)
-        BDDMockito.given(storefrontMutation.checkoutCompleteWithCreditCard).willReturn(checkoutCompleteWithCreditCardPayload)
+        given(checkoutCompleteWithCreditCardPayload.checkout).willReturn(storefrontCheckout)
+        given(storefrontMutation.checkoutCompleteWithCreditCard).willReturn(checkoutCompleteWithCreditCardPayload)
 
         val (graphQueryResponse, storefrontQueryRoot) = mockDataResponse()
         val queryGraphCall: QueryGraphCall = mock()
-        BDDMockito.given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
+        given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
 
-        BDDMockito.given(queryGraphCall.enqueue(any(), anyOrNull(), anyOrNull())).willAnswer({
+        given(queryGraphCall.enqueue(any(), anyOrNull(), anyOrNull())).willAnswer({
             val graphCallback = it.getArgument<GraphCall.Callback<Storefront.QueryRoot>>(0)
             graphCallback.onResponse(graphQueryResponse)
             queryGraphCall
         })
 
-        BDDMockito.given(storefrontQueryRoot.node).willReturn(storefrontCheckout)
+        given(storefrontQueryRoot.node).willReturn(storefrontCheckout)
 
         val checkout = stubCheckout()
         val callback: ApiCallback<Order> = mock()
@@ -484,16 +483,16 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
         mockMutationGraphCallWithOnResponse(graphResponse)
 
         val storefrontCheckout = StorefrontMockInstantiator.newCheckout()
-        BDDMockito.given(storefrontCheckout.ready).willReturn(true)
+        given(storefrontCheckout.ready).willReturn(true)
         val checkoutCompleteWithCreditCardPayload: Storefront.CheckoutCompleteWithCreditCardPayload = mock()
-        BDDMockito.given(checkoutCompleteWithCreditCardPayload.checkout).willReturn(storefrontCheckout)
-        BDDMockito.given(storefrontMutation.checkoutCompleteWithCreditCard).willReturn(checkoutCompleteWithCreditCardPayload)
+        given(checkoutCompleteWithCreditCardPayload.checkout).willReturn(storefrontCheckout)
+        given(storefrontMutation.checkoutCompleteWithCreditCard).willReturn(checkoutCompleteWithCreditCardPayload)
 
         mockDataResponse()
         val queryGraphCall: QueryGraphCall = mock()
-        BDDMockito.given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
+        given(graphClient.queryGraph(any())).willReturn(queryGraphCall)
 
-        BDDMockito.given(queryGraphCall.enqueue(any(), anyOrNull(), anyOrNull())).willAnswer({
+        given(queryGraphCall.enqueue(any(), anyOrNull(), anyOrNull())).willAnswer({
             val graphCallback = it.getArgument<GraphCall.Callback<Storefront.QueryRoot>>(0)
             graphCallback.onFailure(StorefrontMockInstantiator.newGraphError())
             queryGraphCall
@@ -518,8 +517,8 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val userError = StorefrontMockInstantiator.newUserError()
         val checkoutCompleteWithCreditCardPayload: Storefront.CheckoutCompleteWithCreditCardPayload = mock()
-        BDDMockito.given(checkoutCompleteWithCreditCardPayload.userErrors).willReturn(listOf(userError))
-        BDDMockito.given(storefrontMutation.checkoutCompleteWithCreditCard).willReturn(checkoutCompleteWithCreditCardPayload)
+        given(checkoutCompleteWithCreditCardPayload.userErrors).willReturn(listOf(userError))
+        given(storefrontMutation.checkoutCompleteWithCreditCard).willReturn(checkoutCompleteWithCreditCardPayload)
 
         val checkout = stubCheckout()
         val callback: ApiCallback<Order> = mock()

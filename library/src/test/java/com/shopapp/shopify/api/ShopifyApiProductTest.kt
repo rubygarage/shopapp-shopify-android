@@ -7,7 +7,6 @@ import com.shopapp.gateway.entity.Product
 import com.shopapp.shopify.StorefrontMockInstantiator
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.BDDMockito
 
 class ShopifyApiProductTest : BaseShopifyApiTest() {
 
@@ -17,10 +16,10 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(graphResponse)
 
         val storefrontShop = StorefrontMockInstantiator.newShop()
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val storefrontProduct = StorefrontMockInstantiator.newProduct()
-        BDDMockito.given(storefrontQueryRoot.node).willReturn(storefrontProduct)
+        given(storefrontQueryRoot.node).willReturn(storefrontProduct)
 
         val callback: ApiCallback<Product> = mock()
         api.getProduct(StorefrontMockInstantiator.DEFAULT_ID, callback)
@@ -73,8 +72,8 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
 
         val storefrontShop = StorefrontMockInstantiator.newShop()
         val storefrontProducts = StorefrontMockInstantiator.newProductConnection()
-        BDDMockito.given(storefrontShop.products).willReturn(storefrontProducts)
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(storefrontShop.products).willReturn(storefrontProducts)
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<List<Product>> = mock()
         api.getProductList(any(), null, null, null, null, callback)
@@ -129,8 +128,8 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
 
         val storefrontShop = StorefrontMockInstantiator.newShop()
         val storefrontProducts = StorefrontMockInstantiator.newProductConnection()
-        BDDMockito.given(storefrontShop.products).willReturn(storefrontProducts)
-        BDDMockito.given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+        given(storefrontShop.products).willReturn(storefrontProducts)
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<List<Product>> = mock()
         api.searchProductList(any(), null, "", callback)
