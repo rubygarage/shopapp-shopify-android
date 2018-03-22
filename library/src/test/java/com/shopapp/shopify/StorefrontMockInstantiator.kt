@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.spy
 import com.shopapp.shopify.api.entity.ApiCountry
 import com.shopapp.shopify.api.entity.ApiState
+import com.shopify.buy3.GraphError
 import com.shopify.buy3.Storefront
 import com.shopify.graphql.support.ID
 import org.joda.time.DateTime
@@ -259,6 +260,7 @@ object StorefrontMockInstantiator {
     fun newCheckout(): Storefront.Checkout = mock {
         val addressMock = newAddress()
         val shippingLineMock = newShippingRate()
+        val orderMock = newOrder()
 
         on { id } doReturn newID()
         on { webUrl } doReturn DEFAULT_URL
@@ -269,6 +271,7 @@ object StorefrontMockInstantiator {
         on { currencyCode } doReturn DEFAULT_CURRENCY_CODE
         on { shippingAddress } doReturn addressMock
         on { shippingLine } doReturn shippingLineMock
+        on { order } doReturn orderMock
     }
 
     fun newShippingRate(): Storefront.ShippingRate = mock {
@@ -366,5 +369,9 @@ object StorefrontMockInstantiator {
     private fun newProductEdge(): Storefront.ProductEdge = mock {
         val product = newProduct()
         on { node } doReturn product
+    }
+
+    fun newGraphError(): GraphError = mock {
+        on { message } doReturn DEFAULT_ERROR_MESSAGE
     }
 }

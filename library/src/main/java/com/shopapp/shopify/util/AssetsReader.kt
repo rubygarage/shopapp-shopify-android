@@ -2,7 +2,7 @@ package com.shopapp.shopify.util
 
 import android.content.Context
 
-object AssetsReader {
+class AssetsReader {
 
     fun read(filename: String, context: Context): String {
         val input = context.assets.open(filename)
