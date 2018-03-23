@@ -25,8 +25,6 @@ import com.shopapp.shopify.api.call.MutationCallWrapper
 import com.shopapp.shopify.api.call.QueryCallWrapper
 import com.shopapp.shopify.api.entity.AccessData
 import com.shopapp.shopify.api.entity.ApiCountry
-import com.shopapp.shopify.api.entity.ApiCountryResponse
-import com.shopapp.shopify.api.retrofit.CountriesService
 import com.shopapp.shopify.api.retrofit.RestClient
 import com.shopapp.shopify.constant.Constant.ACCESS_TOKEN
 import com.shopapp.shopify.constant.Constant.AND_LOGICAL_KEY
@@ -36,7 +34,6 @@ import com.shopapp.shopify.constant.Constant.EMAIL
 import com.shopapp.shopify.constant.Constant.EXPIRES_DATE
 import com.shopapp.shopify.constant.Constant.ITEMS_COUNT
 import com.shopapp.shopify.constant.Constant.PRODUCT_TYPE_FILTER_KEY
-import com.shopapp.shopify.constant.Constant.REST_OF_WORLD
 import com.shopapp.shopify.constant.Constant.RETRY_HANDLER_DELAY
 import com.shopapp.shopify.constant.Constant.RETRY_HANDLER_MAX_COUNT
 import com.shopapp.shopify.constant.Constant.TITLE_FILTER_KEY
@@ -45,9 +42,6 @@ import com.shopapp.shopify.util.AssetsReader
 import com.shopify.buy3.*
 import com.shopify.graphql.support.ID
 import net.danlew.android.joda.JodaTimeAndroid
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.IOException
 import java.util.*
@@ -428,28 +422,29 @@ class ShopifyApi : Api {
     }
 
     override fun getCountries(callback: ApiCallback<List<Country>>) {
-        val countryService = retrofit.create(CountriesService::class.java)
-
-        countryService.getCountries().enqueue(object : Callback<ApiCountryResponse> {
-            override fun onResponse(call: Call<ApiCountryResponse>?, response: Response<ApiCountryResponse>?) {
-                if (response != null) {
-                    if (response.isSuccessful && response.body() != null) {
-                        val countries = CountryListAdapter.adapt(response.body()?.countries)
-                        if (countries.any { it.name == REST_OF_WORLD }) {
-                            callback.onResult(CountryListAdapter.adapt(getAllCountriesList()))
-                        } else {
-                            callback.onResult(countries)
-                        }
-                    } else if (response.errorBody() != null) {
-                        callback.onFailure(Error.Content())
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<ApiCountryResponse>?, t: Throwable?) {
-                callback.onFailure(Error.Content())
-            }
-        })
+        callback.onResult(CountryListAdapter.adapt(getAllCountriesList()))
+//        val countryService = retrofit.create(CountriesService::class.java)
+//
+//        countryService.getCountries().enqueue(object : Callback<ApiCountryResponse> {
+//            override fun onResponse(call: Call<ApiCountryResponse>?, response: Response<ApiCountryResponse>?) {
+//                if (response != null) {
+//                    if (response.isSuccessful && response.body() != null) {
+//                        val countries = CountryListAdapter.adapt(response.body()?.countries)
+//                        if (countries.any { it.name == REST_OF_WORLD }) {
+//                            callback.onResult(CountryListAdapter.adapt(getAllCountriesList()))
+//                        } else {
+//                            callback.onResult(countries)
+//                        }
+//                    } else if (response.errorBody() != null) {
+//                        callback.onFailure(Error.Content())
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ApiCountryResponse>?, t: Throwable?) {
+//                callback.onFailure(Error.Content())
+//            }
+//        })
     }
 
     override fun updateCustomerSettings(isAcceptMarketing: Boolean, callback: ApiCallback<Unit>) {
