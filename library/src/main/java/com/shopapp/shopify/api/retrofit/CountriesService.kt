@@ -7,6 +7,5 @@ import retrofit2.http.GET
 interface CountriesService {
 
     @GET("/admin/countries.json")
-    fun recentDrives(): Call<ApiCountryResponse>
-
+    fun getCountries(): Call<ApiCountryResponse>
 }

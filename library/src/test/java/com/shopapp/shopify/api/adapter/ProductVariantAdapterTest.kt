@@ -1,24 +1,55 @@
 package com.shopapp.shopify.api.adapter
 
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.given
+import com.nhaarman.mockito_kotlin.mock
 import com.shopapp.shopify.StorefrontMockInstantiator
-import junit.framework.Assert
+import com.shopify.buy3.Storefront
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
+@RunWith(MockitoJUnitRunner.Silent::class)
 class ProductVariantAdapterTest {
 
     @Test
     fun shouldAdaptFromProductVariantStorefrontToProductVariant() {
         val result = ProductVariantAdapter.adapt(StorefrontMockInstantiator.newProductVariant())
-        Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ID, result.id)
-        Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_TITLE, result.title)
-        Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_PRICE, result.price)
-        Assert.assertEquals(true, result.isAvailable)
-        Assert.assertEquals(StorefrontMockInstantiator.DEFAULT_ID, result.productId)
-        Assert.assertNotNull(result.selectedOptions.first())
-        Assert.assertNotNull(result.image)
-        Assert.assertNotNull(result.productImage)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_ID, result.id)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_TITLE, result.title)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_PRICE, result.price)
+        assertEquals(true, result.isAvailable)
+        assertEquals(StorefrontMockInstantiator.DEFAULT_ID, result.productId)
+        assertNotNull(result.selectedOptions.first())
+        assertNotNull(result.image)
+        assertNotNull(result.productImage)
+    }
+
+    @Test
+    fun shouldReturnNullProductImageListOnNullProductConnection() {
+        val product = StorefrontMockInstantiator.newProduct()
+        given(product.images).willReturn(null)
+        val variant = StorefrontMockInstantiator.newProductVariant()
+        given(variant.product).willReturn(product)
+
+        val result = ProductVariantAdapter.adapt(variant)
+        assertNull(result.productImage)
+    }
+
+
+    @Test
+    fun shouldReturnNullProductImageListOnNullProductEdgeList() {
+        val edgesMock: List<Storefront.ImageEdge>? = null
+        val connection: Storefront.ImageConnection = mock {
+            on { edges } doReturn edgesMock
+        }
+        val product = StorefrontMockInstantiator.newProduct()
+        given(product.images).willReturn(connection)
+        val variant = StorefrontMockInstantiator.newProductVariant()
+        given(variant.product).willReturn(product)
+
+        val result = ProductVariantAdapter.adapt(variant)
+        assertNull(result.productImage)
     }
 }

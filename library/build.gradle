@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'jacoco-android'
 
 group = 'com.github.rubygarage'
 
@@ -14,7 +15,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -32,11 +33,17 @@ ext {
     okHttpVersion = '3.9.0'
 }
 
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled false
+    xml.enabled true
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.21"
 
-    implementation 'com.github.rubygarage:shopapp-android:1.0.0'
+    implementation 'com.github.rubygarage:shopapp-android:1.0.1'
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
@@ -73,4 +80,25 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+project.afterEvaluate {
+    android.libraryVariants.all { variant ->
+        def realVariantName = variant.name
+        def variantName = variant.name.capitalize()
+
+        def task = project.tasks["jacocoTest${variantName}UnitTestReport"]
+        def defaultExcludes = task.classDirectories.excludes
+
+        def additionalExcludes = [
+            'com/shopify/buy3/**/*'
+        ]
+
+        def excludes = defaultExcludes + additionalExcludes
+
+        def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${realVariantName}", excludes: excludes)
+
+        task.classDirectories.excludes = excludes
+        task.classDirectories += kotlinDebugTree
+    }
 }

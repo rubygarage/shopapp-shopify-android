@@ -1,7 +1,9 @@
 package com.shopapp.shopify.api.adapter
 
 import com.shopapp.shopify.StorefrontMockInstantiator
-import junit.framework.Assert.assertEquals
+import com.shopapp.shopify.api.entity.ApiState
+import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
@@ -15,5 +17,12 @@ class VariantOptionListAdapterTest {
         val result = resultList.first()
         assertEquals(StorefrontMockInstantiator.DEFAULT_NAME, result.name)
         assertEquals(StorefrontMockInstantiator.DEFAULT_VALUE, result.value)
+    }
+
+    @Test
+    fun shouldReturnEmptyList() {
+        val resultList = VariantOptionListAdapter.adapt(null)
+        assertNotNull(resultList)
+        assertTrue(resultList.isEmpty())
     }
 }

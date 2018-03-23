@@ -10,19 +10,26 @@ import com.shopify.buy3.Storefront
 
 abstract class MutationCallWrapper<out T>(private val callback: ApiCallback<T>) : GraphCall.Callback<Storefront.Mutation> {
 
-    internal abstract fun adapt(data: Storefront.Mutation?): T?
+    internal abstract fun adapt(data: Storefront.Mutation?): AdapterResult<T>?
 
     override fun onResponse(response: GraphResponse<Storefront.Mutation>) {
         val error = ErrorAdapter.adaptErrors(response.errors())
         val result = adapt(response.data())
         when {
             error != null -> callback.onFailure(error)
-            result != null -> callback.onResult(result)
+            result is AdapterResult.UserErrorResult -> callback.onFailure(result.userError)
+            result is AdapterResult.DataResult -> callback.onResult(result.data)
             else -> callback.onFailure(Error.Content())
         }
     }
 
     override fun onFailure(graphError: GraphError) {
         callback.onFailure(ErrorAdapter.adapt(graphError))
+    }
+
+    sealed class AdapterResult<out T> {
+
+        class UserErrorResult<out T>(val userError: Error) : AdapterResult<T>()
+        class DataResult<out T>(val data: T) : AdapterResult<T>()
     }
 }

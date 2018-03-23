@@ -1,11 +1,21 @@
 package com.shopapp.shopify.api.adapter
 
 import com.shopapp.gateway.entity.Order
+import com.shopapp.shopify.api.ext.isSingleOptions
 import com.shopify.buy3.Storefront
 
 object OrderAdapter {
 
-    fun adapt(orderAdaptee: Storefront.Order, paginationValue: String? = null): Order {
+    fun adapt(orderAdaptee: Storefront.Order, paginationValue: String? = null, isRemoveSingleOptions: Boolean = false): Order {
+
+        if (isRemoveSingleOptions) {
+            orderAdaptee.lineItems.edges.forEach {
+                if (it.node.variant.product.isSingleOptions()) {
+                    it.node.variant.selectedOptions = null
+                }
+            }
+        }
+
         return Order(
             id = orderAdaptee.id.toString(),
             currency = orderAdaptee.currencyCode.toString(),
