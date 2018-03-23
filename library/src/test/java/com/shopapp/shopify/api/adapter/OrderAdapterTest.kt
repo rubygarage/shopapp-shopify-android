@@ -12,7 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
+@RunWith(MockitoJUnitRunner.Silent::class)
 class OrderAdapterTest {
 
     @Rule
@@ -33,6 +33,33 @@ class OrderAdapterTest {
         assertEquals(StorefrontMockInstantiator.DEFAULT_DATE.toDate(), result.processedAt)
         assertNotNull(result.orderProducts.first())
         assertEquals(paginationValue, result.paginationValue)
+    }
+
+    @Test
+    fun shouldRemoveSingleOptions() {
+        val variant = Storefront.ProductVariant(StorefrontMockInstantiator.newID())
+        variant.selectedOptions = listOf(StorefrontMockInstantiator.newSelectedOption())
+        variant.title = StorefrontMockInstantiator.DEFAULT_TITLE
+        variant.price = StorefrontMockInstantiator.DEFAULT_PRICE
+        variant.availableForSale = true
+        variant.product = StorefrontMockInstantiator.newProduct()
+
+        val order = StorefrontMockInstantiator.newOrder()
+        val node = order.lineItems.edges.first().node
+        given(node.variant).willReturn(variant)
+
+        val product = node.variant.product
+        val option = StorefrontMockInstantiator.newProductOption()
+        given(product.options).willReturn(listOf(option))
+        given(option.values).willReturn(listOf(""))
+
+        val result = OrderAdapter.adapt(order)
+        assertEquals(1, result.orderProducts.size)
+        assertEquals(1, result.orderProducts.first().productVariant.selectedOptions.size)
+
+        val resultWithoutOptions = OrderAdapter.adapt(order, isRemoveSingleOptions = true)
+        assertEquals(1, resultWithoutOptions.orderProducts.size)
+        assertEquals(0, resultWithoutOptions.orderProducts.first().productVariant.selectedOptions.size)
     }
 
     @Test

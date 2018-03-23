@@ -200,7 +200,7 @@ object StorefrontMockInstantiator {
         on { url } doReturn DEFAULT_URL
     }
 
-    fun newBlog(): Storefront.Blog = mock {
+    private fun newBlog(): Storefront.Blog = mock {
         on { id } doReturn newID()
         on { title } doReturn DEFAULT_TITLE
     }
@@ -242,7 +242,7 @@ object StorefrontMockInstantiator {
         on { paymentSettings } doReturn paymentSettingsMock
     }
 
-    fun newPaymentSettings(): Storefront.PaymentSettings = mock {
+    private fun newPaymentSettings(): Storefront.PaymentSettings = mock {
         on { currencyCode } doReturn DEFAULT_CURRENCY_CODE
     }
 
@@ -335,7 +335,7 @@ object StorefrontMockInstantiator {
         on { node } doReturn variant
     }
 
-    fun newProductVariantConnection(): Storefront.ProductVariantConnection = mock {
+    private fun newProductVariantConnection(): Storefront.ProductVariantConnection = mock {
         val result = newList(newProductVariantEdge())
 
         on { edges } doReturn listOf(result)

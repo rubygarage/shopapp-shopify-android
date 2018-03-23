@@ -20,5 +20,5 @@ object ProductVariantAdapter {
     }
 
     private fun convertImage(productAdaptee: Storefront.Product): List<Image>? =
-        productAdaptee.images?.edges?.map { ImageAdapter.adapt(it.node)!! }
+        productAdaptee.images?.edges?.filterNotNull()?.mapNotNull { ImageAdapter.adapt(it.node) }
 }
