@@ -1,5 +1,7 @@
 # Shopify Provider for ShopApp Android
 
+![ ](https://github.com/rubygarage/shopapp-shopify-android/blob/master/assets/shopapp-main-screen.gif?raw=true)
+
 Shopify provider for ShopApp for Android. ShopApp is an application that turns a Shopify-based store into a mobile app. 
 ShopApp syncs with Shopify store and transfers a product catalog and user data to a mobile app. 
 The app provides features like customizable push notifications, promo codes, and convenient payments with popular digital wallets like Android Pay.
