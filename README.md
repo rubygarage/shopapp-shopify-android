@@ -1,4 +1,4 @@
-# Shopify Provider for ShopApp for Android
+# Shopify Provider for ShopApp Android
 
 Shopify provider for ShopApp for Android. ShopApp is an application that turns a Shopify-based store into a mobile app. 
 ShopApp syncs with Shopify store and transfers a product catalog and user data to a mobile app. 
