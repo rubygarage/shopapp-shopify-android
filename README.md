@@ -3,18 +3,11 @@
 
 # Shopify Provider for ShopApp Android
 
-Shopify provider for ShopApp for Android. ShopApp is an application that turns a Shopify-based store into a mobile app. 
+Shopify provider for [ShopApp for Android] (https://github.com/rubygarage/shopapp-android). ShopApp is an application that turns a Shopify-based store into a mobile app. 
 ShopApp syncs with Shopify store and transfers a product catalog and user data to a mobile app. 
 The app provides features like customizable push notifications, promo codes, and convenient payments with popular digital wallets like Android Pay.
 
 ![ ](https://github.com/rubygarage/shopapp-shopify-android/blob/master/assets/shopapp-main-screen.gif?raw=true)
-
-## About ShopApp Shopify for Android
-
-This library contains the Shopify provider for [ShopApp for Android](https://github.com/rubygarage/shopapp-android). 
-
-ShopApp an open source application that allows store owners of popular ecommerce platforms like Shopify and Magento to launch an iOS or Android mobile app for their store. 
-ShopApp connects with the platform and transfers an existing store to a mobile app. 
 
 # Installation
 ## Connect the library
@@ -52,5 +45,9 @@ Picture
 * Android Studio for application build
 * Gradle to install all the dependencies   
 
-# License
-ShopApp is licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+## License
+The ShopApp Shopify for iOS provider is licensed under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0)
+***
+<a href="https://rubygarage.org/"><img src="https://github.com/rubygarage/shopapp-shopify-ios/blob/master/assets/rubygarage.png?raw=true" alt="RubyGarage Logo" width="415" height="128"></a>
+
+RubyGarage is a leading software development and consulting company in Eastern Europe. Our main expertise includes Ruby and Ruby on Rails, but we successfuly employ other technologies to deliver the best results to our clients. [Check out our portoflio](https://rubygarage.org/portfolio) for even more exciting works!
