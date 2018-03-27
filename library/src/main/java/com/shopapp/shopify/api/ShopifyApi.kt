@@ -21,6 +21,7 @@ import com.shopapp.shopify.api.QueryHelper.getDefaultUserErrors
 import com.shopapp.shopify.api.QueryHelper.getProductCollectionSortKey
 import com.shopapp.shopify.api.QueryHelper.getProductSortKey
 import com.shopapp.shopify.api.adapter.*
+import com.shopapp.shopify.api.call.AdapterResult
 import com.shopapp.shopify.api.call.MutationCallWrapper
 import com.shopapp.shopify.api.call.QueryCallWrapper
 import com.shopapp.shopify.api.entity.AccessData
@@ -211,14 +212,14 @@ class ShopifyApi : Api {
             val query = Storefront.query {
                 it.customer(accessData.accessToken) { getDefaultCustomerQuery(it) }
             }
-            graphClient.queryGraph(query).enqueue(object : QueryCallWrapper<Customer>(callback) {
-                override fun adapt(data: Storefront.QueryRoot): Customer? {
+            graphClient.queryGraph(query).enqueue(object : QueryCallWrapper<Customer?>(callback) {
+                override fun adapt(data: Storefront.QueryRoot): AdapterResult<Customer?> {
                     val adaptee = data.customer
                     return if (adaptee != null) {
-                        adaptee.let { CustomerAdapter.adapt(it) }
+                        AdapterResult.DataResult(CustomerAdapter.adapt(adaptee))
                     } else {
                         removeSession()
-                        null
+                        AdapterResult.ErrorResult(Error.Content())
                     }
                 }
             })
@@ -256,7 +257,7 @@ class ShopifyApi : Api {
                     return data?.customerAddressCreate?.let {
                         val userError = ErrorAdapter.adaptUserError(it.userErrors)
                         return if (userError != null) {
-                            AdapterResult.UserErrorResult(userError)
+                            AdapterResult.ErrorResult(userError)
                         } else {
                             AdapterResult.DataResult(it.customerAddress.id.toString())
                         }
@@ -296,7 +297,7 @@ class ShopifyApi : Api {
                     return data?.customerAddressUpdate?.let {
                         val userError = ErrorAdapter.adaptUserError(it.userErrors)
                         return if (userError != null) {
-                            AdapterResult.UserErrorResult(userError)
+                            AdapterResult.ErrorResult(userError)
                         } else {
                             AdapterResult.DataResult(Unit)
                         }
@@ -324,7 +325,7 @@ class ShopifyApi : Api {
                     return data?.customerAddressDelete?.let {
                         val userError = ErrorAdapter.adaptUserError(it.userErrors)
                         return if (userError != null) {
-                            AdapterResult.UserErrorResult(userError)
+                            AdapterResult.ErrorResult(userError)
                         } else {
                             AdapterResult.DataResult(Unit)
                         }
@@ -351,7 +352,7 @@ class ShopifyApi : Api {
                     return data?.customerDefaultAddressUpdate?.let {
                         val userError = ErrorAdapter.adaptUserError(it.userErrors)
                         return if (userError != null) {
-                            AdapterResult.UserErrorResult(userError)
+                            AdapterResult.ErrorResult(userError)
                         } else {
                             AdapterResult.DataResult(Unit)
                         }
@@ -382,7 +383,7 @@ class ShopifyApi : Api {
                     return data?.customerUpdate?.let {
                         val userError = ErrorAdapter.adaptUserError(it.userErrors)
                         return if (userError != null) {
-                            AdapterResult.UserErrorResult(userError)
+                            AdapterResult.ErrorResult(userError)
                         } else {
                             AdapterResult.DataResult(CustomerAdapter.adapt(it.customer))
                         }
@@ -408,7 +409,7 @@ class ShopifyApi : Api {
                     return data?.customerUpdate?.let {
                         val userError = ErrorAdapter.adaptUserError(it.userErrors)
                         if (userError != null) {
-                            return AdapterResult.UserErrorResult(userError)
+                            return AdapterResult.ErrorResult(userError)
                         } else {
                             val tokenResponse = requestToken(it.customer.email, password)
                             if (tokenResponse != null) {
@@ -416,7 +417,7 @@ class ShopifyApi : Api {
                                     return AdapterResult.DataResult(Unit)
                                 }
                                 tokenResponse.second?.let {
-                                    return AdapterResult.UserErrorResult(it)
+                                    return AdapterResult.ErrorResult(it)
                                 }
                             }
                         }
@@ -468,7 +469,7 @@ class ShopifyApi : Api {
                     return data?.customerUpdate?.let {
                         val userError = ErrorAdapter.adaptUserError(it.userErrors)
                         return if (userError != null) {
-                            AdapterResult.UserErrorResult(userError)
+                            AdapterResult.ErrorResult(userError)
                         } else {
                             AdapterResult.DataResult(Unit)
                         }
@@ -494,12 +495,7 @@ class ShopifyApi : Api {
                             .descriptionHtml()
                             .images({ it.first(ITEMS_COUNT) }, { imageConnectionQuery ->
                                 imageConnectionQuery.edges({ imageEdgeQuery ->
-                                    imageEdgeQuery.node({ imageQuery ->
-                                        imageQuery
-                                            .id()
-                                            .src()
-                                            .altText()
-                                    })
+                                    imageEdgeQuery.node({ QueryHelper.getDefaultImageQuery(it) })
                                 })
                             })
                             .variants({ it.first(ITEMS_COUNT) }) { productVariantConnectionQuery ->
@@ -518,8 +514,13 @@ class ShopifyApi : Api {
 
         val call = graphClient.queryGraph(query)
         call.enqueue(object : QueryCallWrapper<Product>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): Product {
-                return ProductAdapter.adapt(data.shop, data.node as Storefront.Product)
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<Product> {
+                val productAdaptee = data.node as? Storefront.Product
+                return if (productAdaptee != null) {
+                    AdapterResult.DataResult(ProductAdapter.adapt(data.shop, productAdaptee))
+                } else {
+                    AdapterResult.ErrorResult(Error.Critical())
+                }
             }
         })
     }
@@ -559,12 +560,7 @@ class ShopifyApi : Api {
                                 .description()
                                 .descriptionHtml()
                                 .updatedAt()
-                                .image({ imageQuery ->
-                                    imageQuery
-                                        .id()
-                                        .src()
-                                        .altText()
-                                })
+                                .image({ QueryHelper.getDefaultImageQuery(it) })
                                 .products({ args ->
                                     args.first(ITEMS_COUNT)
                                     if (paginationValue != null) {
@@ -583,12 +579,7 @@ class ShopifyApi : Api {
                                                 getDefaultProductQuery(productQuery)
                                                     .images({ it.first(1) }, { imageConnectionQuery ->
                                                         imageConnectionQuery.edges({ imageEdgeQuery ->
-                                                            imageEdgeQuery.node({ imageQuery ->
-                                                                imageQuery
-                                                                    .id()
-                                                                    .src()
-                                                                    .altText()
-                                                            })
+                                                            imageEdgeQuery.node({ QueryHelper.getDefaultImageQuery(it) })
                                                         })
                                                     })
                                                     .variants({ it.first(ITEMS_COUNT) }) { productVariantConnectionQuery ->
@@ -605,8 +596,13 @@ class ShopifyApi : Api {
 
         val call = graphClient.queryGraph(query)
         call.enqueue(object : QueryCallWrapper<Category>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): Category {
-                return CategoryAdapter.adapt(data.shop, data.node as Storefront.Collection)
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<Category> {
+                val collectionAdaptee = data.node as? Storefront.Collection
+                return if (collectionAdaptee != null) {
+                    AdapterResult.DataResult(CategoryAdapter.adapt(data.shop, collectionAdaptee))
+                } else {
+                    AdapterResult.ErrorResult(Error.Critical())
+                }
             }
         })
     }
@@ -627,11 +623,7 @@ class ShopifyApi : Api {
                                 it.title()
                                     .description()
                                     .updatedAt()
-                                    .image({
-                                        it.id()
-                                            .src()
-                                            .altText()
-                                    })
+                                    .image({ QueryHelper.getDefaultImageQuery(it) })
                             }
                     }
                 }
@@ -640,8 +632,8 @@ class ShopifyApi : Api {
 
         val call = graphClient.queryGraph(query)
         call.enqueue(object : QueryCallWrapper<List<Category>>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): List<Category> {
-                return CategoryListAdapter.adapt(data.shop)
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<List<Category>> {
+                return AdapterResult.DataResult(CategoryListAdapter.adapt(data.shop))
             }
         })
     }
@@ -660,8 +652,13 @@ class ShopifyApi : Api {
 
         val call = graphClient.queryGraph(query)
         call.enqueue(object : QueryCallWrapper<Pair<Article, String>>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): Pair<Article, String> {
-                return Pair(ArticleAdapter.adapt(data.node as Storefront.Article), baseUrl)
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<Pair<Article, String>> {
+                val articleAdaptee = data.node as? Storefront.Article
+                return if (articleAdaptee != null) {
+                    AdapterResult.DataResult(Pair(ArticleAdapter.adapt(articleAdaptee), baseUrl))
+                } else {
+                    AdapterResult.ErrorResult(Error.Critical())
+                }
             }
         })
     }
@@ -692,8 +689,8 @@ class ShopifyApi : Api {
 
         val call = graphClient.queryGraph(query)
         call.enqueue(object : QueryCallWrapper<List<Article>>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): List<Article> {
-                return ArticleListAdapter.adapt(data.shop.articles.edges)
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<List<Article>> {
+                return AdapterResult.DataResult(ArticleListAdapter.adapt(data.shop.articles.edges))
             }
         })
     }
@@ -715,8 +712,8 @@ class ShopifyApi : Api {
 
         val call = graphClient.queryGraph(query)
         call.enqueue(object : QueryCallWrapper<Shop>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): Shop {
-                return ShopAdapter.adapt(data)
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<Shop> {
+                return AdapterResult.DataResult(ShopAdapter.adapt(data))
             }
         })
     }
@@ -749,8 +746,8 @@ class ShopifyApi : Api {
 
             val call = graphClient.queryGraph(query)
             call.enqueue(object : QueryCallWrapper<List<Order>>(callback) {
-                override fun adapt(data: Storefront.QueryRoot): List<Order> =
-                    OrderListAdapter.adapt(data.customer.orders)
+                override fun adapt(data: Storefront.QueryRoot): AdapterResult<List<Order>> =
+                    AdapterResult.DataResult(OrderListAdapter.adapt(data.customer.orders))
             })
 
         }
@@ -774,8 +771,13 @@ class ShopifyApi : Api {
 
         val call = graphClient.queryGraph(query)
         call.enqueue(object : QueryCallWrapper<Order>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): Order {
-                return OrderAdapter.adapt(data.node as Storefront.Order, isRemoveSingleOptions = true)
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<Order> {
+                val orderAdaptee = data.node as? Storefront.Order
+                return if (orderAdaptee != null) {
+                    AdapterResult.DataResult(OrderAdapter.adapt(orderAdaptee, isRemoveSingleOptions = true))
+                } else {
+                    AdapterResult.ErrorResult(Error.Critical())
+                }
             }
         })
 
@@ -803,7 +805,7 @@ class ShopifyApi : Api {
                 return data?.checkoutCreate?.let {
                     val userError = ErrorAdapter.adaptUserError(it.userErrors)
                     return if (userError != null) {
-                        AdapterResult.UserErrorResult(userError)
+                        AdapterResult.ErrorResult(userError)
                     } else {
                         AdapterResult.DataResult(CheckoutAdapter.adapt(it.checkout))
                     }
@@ -822,9 +824,13 @@ class ShopifyApi : Api {
         })
 
         graphClient.queryGraph(query).enqueue(object : QueryCallWrapper<Checkout>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): Checkout {
-                val checkout = data.node as Storefront.Checkout
-                return CheckoutAdapter.adapt(checkout)
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<Checkout> {
+                val checkoutAdaptee = data.node as? Storefront.Checkout
+                return if (checkoutAdaptee != null) {
+                    AdapterResult.DataResult(CheckoutAdapter.adapt(checkoutAdaptee))
+                } else {
+                    AdapterResult.ErrorResult(Error.Critical())
+                }
             }
         })
     }
@@ -854,7 +860,7 @@ class ShopifyApi : Api {
                 return data?.checkoutShippingAddressUpdate?.let {
                     val userError = ErrorAdapter.adaptUserError(it.userErrors)
                     return if (userError != null) {
-                        AdapterResult.UserErrorResult(userError)
+                        AdapterResult.ErrorResult(userError)
                     } else {
                         AdapterResult.DataResult(CheckoutAdapter.adapt(data.checkoutShippingAddressUpdate.checkout))
                     }
@@ -919,7 +925,7 @@ class ShopifyApi : Api {
                 return data?.checkoutShippingLineUpdate?.let {
                     val userError = ErrorAdapter.adaptUserError(it.userErrors)
                     return if (userError != null) {
-                        AdapterResult.UserErrorResult(userError)
+                        AdapterResult.ErrorResult(userError)
                     } else {
                         AdapterResult.DataResult(CheckoutAdapter.adapt(it.checkout))
                     }
@@ -934,9 +940,9 @@ class ShopifyApi : Api {
             it.shop { it.paymentSettings { it.acceptedCardBrands() } }
         }
         graphClient.queryGraph(query).enqueue(object : QueryCallWrapper<List<CardType>>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): List<CardType> {
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<List<CardType>> {
                 val adaptee = data.shop.paymentSettings.acceptedCardBrands
-                return CardAdapter.adapt(adaptee)
+                return AdapterResult.DataResult(CardAdapter.adapt(adaptee))
             }
         })
     }
@@ -978,8 +984,8 @@ class ShopifyApi : Api {
         }
         val call = graphClient.queryGraph(query)
         call.enqueue(object : QueryCallWrapper<String>(vaultUrlCallback) {
-            override fun adapt(data: Storefront.QueryRoot): String =
-                data.shop?.paymentSettings?.cardVaultUrl ?: ""
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<String> =
+                AdapterResult.DataResult(data.shop?.paymentSettings?.cardVaultUrl ?: "")
         })
     }
 
@@ -1027,7 +1033,7 @@ class ShopifyApi : Api {
                 return data?.checkoutCompleteWithCreditCard?.let {
                     val userError = ErrorAdapter.adaptUserError(it.userErrors)
                     if (userError != null) {
-                        return AdapterResult.UserErrorResult(userError)
+                        return AdapterResult.ErrorResult(userError)
                     } else {
                         if (it.checkout?.ready == true) AdapterResult.DataResult(true) else null
                     }
@@ -1116,10 +1122,14 @@ class ShopifyApi : Api {
             .build()
 
         graphClient.queryGraph(query).enqueue(object : QueryCallWrapper<Order>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): Order? {
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<Order> {
                 val checkout = data.node as? Storefront.Checkout
-                val order = checkout?.order
-                return order?.let { OrderAdapter.adapt(checkout.order) }
+                val orderAdaptee = checkout?.order
+                return if (orderAdaptee != null) {
+                    AdapterResult.DataResult(OrderAdapter.adapt(orderAdaptee))
+                } else {
+                    AdapterResult.ErrorResult(Error.Content())
+                }
             }
         }, null, retryHandler)
     }
@@ -1152,12 +1162,7 @@ class ShopifyApi : Api {
                                 getDefaultProductQuery(productQuery)
                                     .images({ it.first(1) }, { imageConnectionQuery ->
                                         imageConnectionQuery.edges({ imageEdgeQuery ->
-                                            imageEdgeQuery.node({ imageQuery ->
-                                                imageQuery
-                                                    .id()
-                                                    .src()
-                                                    .altText()
-                                            })
+                                            imageEdgeQuery.node({ QueryHelper.getDefaultImageQuery(it) })
                                         })
                                     })
                                     .variants({ it.first(ITEMS_COUNT) }) { productVariantConnectionQuery ->
@@ -1173,8 +1178,8 @@ class ShopifyApi : Api {
 
         val call = graphClient.queryGraph(query)
         call.enqueue(object : QueryCallWrapper<List<Product>>(callback) {
-            override fun adapt(data: Storefront.QueryRoot): List<Product> =
-                ProductListAdapter.adapt(data.shop, data.shop.products)
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<List<Product>> =
+                AdapterResult.DataResult(ProductListAdapter.adapt(data.shop, data.shop.products))
         })
     }
 }

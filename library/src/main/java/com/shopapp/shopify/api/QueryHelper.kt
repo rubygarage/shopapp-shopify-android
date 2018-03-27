@@ -30,22 +30,12 @@ internal object QueryHelper {
             .weightUnit()
             .availableForSale()
             .selectedOptions({ optionsQuery -> optionsQuery.name().value() })
-            .image({ imageQuery ->
-                imageQuery
-                    .id()
-                    .src()
-                    .altText()
-            })
+            .image({ getDefaultImageQuery(it) })
             .product({ productQuery ->
                 productQuery
                     .images({ it.first(1) }, { imageConnectionQuery ->
                         imageConnectionQuery.edges({ imageEdgeQuery ->
-                            imageEdgeQuery.node({ imageQuery ->
-                                imageQuery
-                                    .id()
-                                    .src()
-                                    .altText()
-                            })
+                            imageEdgeQuery.node({ getDefaultImageQuery(it) })
                         })
                     })
                     .options({ optionsQuery -> optionsQuery.name().values() })
@@ -59,11 +49,7 @@ internal object QueryHelper {
             .tags()
             .publishedAt()
             .url()
-            .image({
-                it.id()
-                    .src()
-                    .altText()
-            })
+            .image({ getDefaultImageQuery(it) })
             .author {
                 it.firstName()
                     .lastName()
@@ -155,6 +141,12 @@ internal object QueryHelper {
                     }
                 }
             }
+    }
+
+    fun getDefaultImageQuery(imageQuery: Storefront.ImageQuery): Storefront.ImageQuery {
+        return imageQuery.id()
+            .src()
+            .altText()
     }
 
     fun getProductSortKey(sortType: SortType?): Storefront.ProductSortKeys? {
