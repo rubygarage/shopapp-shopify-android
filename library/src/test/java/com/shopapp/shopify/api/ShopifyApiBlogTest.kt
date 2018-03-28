@@ -66,6 +66,23 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
     }
 
     @Test
+    fun getArticleShouldReturnCriticalError() {
+        val (graphResponse, storefrontQueryRoot) = mockDataResponse()
+        mockQueryGraphCallWithOnResponse(graphResponse)
+
+        given(storefrontQueryRoot.node).willReturn(null)
+        val callback: ApiCallback<Pair<Article, String>> = mock()
+        api.getArticle(StorefrontMockInstantiator.DEFAULT_ID, callback)
+
+        argumentCaptor<Error>().apply {
+            verify(callback, never()).onResult(any())
+            verify(callback).onFailure(capture())
+
+            assertTrue(firstValue is Error.Critical)
+        }
+    }
+
+    @Test
     fun getArticleListShouldReturnProductList() {
         val (graphResponse, storefrontQueryRoot) = mockDataResponse()
         mockQueryGraphCallWithOnResponse(graphResponse)

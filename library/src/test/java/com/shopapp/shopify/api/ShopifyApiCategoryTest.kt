@@ -66,6 +66,26 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
     }
 
     @Test
+    fun getCategoryDetailsShouldReturnCriticalError() {
+        val (graphResponse, storefrontQueryRoot) = mockDataResponse()
+        mockQueryGraphCallWithOnResponse(graphResponse)
+
+        given(storefrontQueryRoot.node).willReturn(null)
+        val storefrontShop = StorefrontMockInstantiator.newShop()
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+
+        val callback: ApiCallback<Category> = mock()
+        api.getCategoryDetails(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
+
+        argumentCaptor<Error>().apply {
+            verify(callback, never()).onResult(any())
+            verify(callback).onFailure(capture())
+
+            assertTrue(firstValue is Error.Critical)
+        }
+    }
+
+    @Test
     fun getCategoryListShouldReturnProductList() {
         val (graphResponse, storefrontQueryRoot) = mockDataResponse()
         mockQueryGraphCallWithOnResponse(graphResponse)

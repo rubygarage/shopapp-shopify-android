@@ -10,7 +10,7 @@ import com.shopify.buy3.Storefront
 
 abstract class QueryCallWrapper<out T>(private val callback: ApiCallback<T>) : GraphCall.Callback<Storefront.QueryRoot> {
 
-    internal abstract fun adapt(data: Storefront.QueryRoot): T?
+    internal abstract fun adapt(data: Storefront.QueryRoot): AdapterResult<T>
 
     override fun onResponse(response: GraphResponse<Storefront.QueryRoot>) {
         val error = ErrorAdapter.adaptErrors(response.errors())
@@ -18,7 +18,8 @@ abstract class QueryCallWrapper<out T>(private val callback: ApiCallback<T>) : G
         val result = data?.let { adapt(it) }
         when {
             error != null -> callback.onFailure(error)
-            result != null -> callback.onResult(result)
+            result is AdapterResult.ErrorResult -> callback.onFailure(result.error)
+            result is AdapterResult.DataResult -> callback.onResult(result.data)
             else -> callback.onFailure(Error.Content())
         }
     }
