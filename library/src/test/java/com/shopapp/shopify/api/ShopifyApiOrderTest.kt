@@ -133,4 +133,21 @@ class ShopifyApiOrderTest : BaseShopifyApiTest() {
             assertTrue(firstValue is Error.Content)
         }
     }
+
+    @Test
+    fun getOrderShouldReturnCriticalError() {
+        val (graphResponse, storefrontQueryRoot) = mockDataResponse()
+        mockQueryGraphCallWithOnResponse(graphResponse)
+
+        given(storefrontQueryRoot.node).willReturn(null)
+        val callback: ApiCallback<Order> = mock()
+        api.getOrder(StorefrontMockInstantiator.DEFAULT_ID, callback)
+
+        argumentCaptor<Error>().apply {
+            verify(callback, never()).onResult(any())
+            verify(callback).onFailure(capture())
+
+            assertTrue(firstValue is Error.Critical)
+        }
+    }
 }

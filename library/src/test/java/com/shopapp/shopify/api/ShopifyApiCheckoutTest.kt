@@ -75,7 +75,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
     }
 
     @Test
-    fun getCheckoutShouldReturnProductList() {
+    fun getCheckoutShouldReturnCheckout() {
         val (graphResponse, storefrontQueryRoot) = mockDataResponse()
         mockQueryGraphCallWithOnResponse(graphResponse)
 
@@ -122,6 +122,24 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
             verify(callback).onFailure(capture())
 
             assertTrue(firstValue is Error.Content)
+        }
+    }
+
+    @Test
+    fun getCheckoutShouldReturnCriticalError() {
+        val (graphResponse, storefrontQueryRoot) = mockDataResponse()
+        mockQueryGraphCallWithOnResponse(graphResponse)
+
+        given(storefrontQueryRoot.node).willReturn(null)
+
+        val callback: ApiCallback<Checkout> = mock()
+        api.getCheckout(StorefrontMockInstantiator.DEFAULT_ID, callback)
+
+        argumentCaptor<Error>().apply {
+            verify(callback, never()).onResult(any())
+            verify(callback).onFailure(capture())
+
+            assertTrue(firstValue is Error.Critical)
         }
     }
 

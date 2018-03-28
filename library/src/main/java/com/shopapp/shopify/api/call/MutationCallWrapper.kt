@@ -17,7 +17,7 @@ abstract class MutationCallWrapper<out T>(private val callback: ApiCallback<T>) 
         val result = adapt(response.data())
         when {
             error != null -> callback.onFailure(error)
-            result is AdapterResult.UserErrorResult -> callback.onFailure(result.userError)
+            result is AdapterResult.ErrorResult -> callback.onFailure(result.error)
             result is AdapterResult.DataResult -> callback.onResult(result.data)
             else -> callback.onFailure(Error.Content())
         }
@@ -25,11 +25,5 @@ abstract class MutationCallWrapper<out T>(private val callback: ApiCallback<T>) 
 
     override fun onFailure(graphError: GraphError) {
         callback.onFailure(ErrorAdapter.adapt(graphError))
-    }
-
-    sealed class AdapterResult<out T> {
-
-        class UserErrorResult<out T>(val userError: Error) : AdapterResult<T>()
-        class DataResult<out T>(val data: T) : AdapterResult<T>()
     }
 }

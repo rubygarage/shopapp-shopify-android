@@ -41,9 +41,9 @@ jacocoAndroidUnitTestReport {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.21"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.31"
 
-    implementation 'com.github.rubygarage:shopapp-android:1.0.1'
+    implementation 'com.github.rubygarage:shopapp-android:1.0.3'
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
