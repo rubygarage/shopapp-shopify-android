@@ -15,7 +15,7 @@ The app provides features like customizable push notifications, promo codes, and
 To use the ShopApp provider for Shopify, connect the library to the [main application](https://github.com/rubygarage/shopapp-android) with Gradle:
 
 ``` 
-implementation "com.github.rubygarage:shopapp-shopify-android:1.0.0" 
+implementation "com.github.rubygarage:shopapp-shopify-android:1.0.2" 
 ```
 
 ## Change the ShopApplication file
@@ -34,11 +34,13 @@ Where:
 
 **API KEY** is used to receive your store's data like items and collections. To receive the key, you have to visit the admin panel and proceed to Apps - Manage Private Apps. Create a new application if you don't have one by copying Storefront API and adding it to your library's configuration
 
-![ ](https://github.com/rubygarage/shopapp-shopify-android/blob/master/assets/storefront.png?raw=true?raw=true)
+![ ](https://github.com/rubygarage/shopapp-shopify-android/blob/master/assets/storefront.png?raw=true)
 
 **ADMIN API KEY** is a key for Admin API. The library uses the key to receive a list of countries eligible to shipping.
 
-**ADMIN PASSWORD** is a password for Admin API.  
+**ADMIN PASSWORD** is a password for Admin API.
+
+![ ](https://github.com/rubygarage/shopapp-shopify-android/blob/master/assets/keys.png?raw=true)
 
 # Requirements
 * Android 4.4 (API 19) - a minimum supported version
