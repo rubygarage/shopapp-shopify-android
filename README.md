@@ -15,7 +15,7 @@ The app provides features like customizable push notifications, promo codes, and
 To use the ShopApp provider for Shopify, connect the library to the [main application](https://github.com/rubygarage/shopapp-android) with Gradle:
 
 ``` 
-implementation "com.github.rubygarage:shopapp-shopify-android:1.0.2" 
+implementation "com.github.rubygarage:shopapp-shopify-android:1.0.3" 
 ```
 
 ## Change the ShopApplication file

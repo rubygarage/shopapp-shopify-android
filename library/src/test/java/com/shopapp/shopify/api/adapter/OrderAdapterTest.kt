@@ -55,11 +55,11 @@ class OrderAdapterTest {
 
         val result = OrderAdapter.adapt(order)
         assertEquals(1, result.orderProducts.size)
-        assertEquals(1, result.orderProducts.first().productVariant.selectedOptions.size)
+        assertEquals(1, result.orderProducts.first().productVariant!!.selectedOptions.size)
 
         val resultWithoutOptions = OrderAdapter.adapt(order, isRemoveSingleOptions = true)
         assertEquals(1, resultWithoutOptions.orderProducts.size)
-        assertEquals(0, resultWithoutOptions.orderProducts.first().productVariant.selectedOptions.size)
+        assertEquals(0, resultWithoutOptions.orderProducts.first().productVariant!!.selectedOptions.size)
     }
 
     @Test
