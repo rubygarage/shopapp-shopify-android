@@ -15,7 +15,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.3"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -28,11 +28,6 @@ buildscript {
     }
 }
 
-ext {
-    retrofitVersion = '2.3.0'
-    okHttpVersion = '3.9.0'
-}
-
 jacocoAndroidUnitTestReport {
     csv.enabled false
     html.enabled false
@@ -41,9 +36,10 @@ jacocoAndroidUnitTestReport {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.31"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
-    implementation 'com.github.rubygarage:shopapp-android:1.0.3'
+    implementation 'com.github.rubygarage:shopapp-android:1.0.4'
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
