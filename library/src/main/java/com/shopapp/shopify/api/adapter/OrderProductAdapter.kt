@@ -8,7 +8,7 @@ object OrderProductAdapter {
     fun adapt(orderAdaptee: Storefront.OrderLineItem): OrderProduct {
         return OrderProduct(
             title = orderAdaptee.title,
-            productVariant = ProductVariantAdapter.adapt(orderAdaptee.variant),
+            productVariant = orderAdaptee.variant?.let { ProductVariantAdapter.adapt(it) },
             quantity = orderAdaptee.quantity
         )
     }
