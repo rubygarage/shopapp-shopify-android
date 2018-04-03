@@ -10,8 +10,9 @@ object OrderAdapter {
 
         if (isRemoveSingleOptions) {
             orderAdaptee.lineItems.edges.forEach {
-                if (it.node.variant.product.isSingleOptions()) {
-                    it.node.variant.selectedOptions = null
+                val variant = it.node.variant
+                if (variant != null && variant.product.isSingleOptions()) {
+                    variant.selectedOptions = null
                 }
             }
         }
