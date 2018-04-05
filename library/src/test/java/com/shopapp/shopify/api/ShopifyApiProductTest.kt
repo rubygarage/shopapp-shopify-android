@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.*
 import com.shopapp.gateway.ApiCallback
 import com.shopapp.gateway.entity.Error
 import com.shopapp.gateway.entity.Product
+import com.shopapp.gateway.entity.ProductVariant
 import com.shopapp.shopify.StorefrontMockInstantiator
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -83,6 +84,62 @@ class ShopifyApiProductTest : BaseShopifyApiTest() {
             verify(callback).onFailure(capture())
 
             assertTrue(firstValue is Error.Critical)
+        }
+    }
+
+    @Test
+    fun getProductVariantListWithFullArgumentsShouldReturnProductVariantList() {
+        val (graphResponse, storefrontQueryRoot) = mockDataResponse()
+        mockQueryGraphCallWithOnResponse(graphResponse)
+
+        val storefrontShop = StorefrontMockInstantiator.newShop()
+        val storefrontProductVariantList = listOf(StorefrontMockInstantiator.newProductVariant())
+        given(storefrontQueryRoot.nodes).willReturn(storefrontProductVariantList)
+        given(storefrontQueryRoot.shop).willReturn(storefrontShop)
+
+        val callback: ApiCallback<List<ProductVariant>> = mock()
+        api.getProductVariantList(listOf(), callback)
+
+        argumentCaptor<List<ProductVariant>>().apply {
+            verify(callback).onResult(capture())
+            verify(callback, never()).onFailure(any())
+
+            assertTrue(firstValue.isNotEmpty())
+            val productVariant = firstValue.first()
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ID, productVariant.id)
+            assertEquals(storefrontProductVariantList.first().title, productVariant.title)
+        }
+    }
+
+    @Test
+    fun getProductVariantListShouldReturnNonCriticalError() {
+        val response = mockErrorResponse()
+        mockQueryGraphCallWithOnResponse(response)
+
+        val callback: ApiCallback<List<ProductVariant>> = mock()
+        api.getProductVariantList(listOf(), callback)
+
+        argumentCaptor<Error>().apply {
+            verify(callback, never()).onResult(any())
+            verify(callback).onFailure(capture())
+
+            assertEquals(StorefrontMockInstantiator.DEFAULT_ERROR_MESSAGE, firstValue.message)
+            assertTrue(firstValue is Error.NonCritical)
+        }
+    }
+
+    @Test
+    fun getProductVariantListShouldReturnContentError() {
+        mockQueryGraphCallWithOnFailure()
+
+        val callback: ApiCallback<List<ProductVariant>> = mock()
+        api.getProductVariantList(listOf(), callback)
+
+        argumentCaptor<Error>().apply {
+            verify(callback, never()).onResult(any())
+            verify(callback).onFailure(capture())
+
+            assertTrue(firstValue is Error.Content)
         }
     }
 
