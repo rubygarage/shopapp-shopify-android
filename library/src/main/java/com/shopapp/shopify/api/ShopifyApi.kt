@@ -525,6 +525,28 @@ class ShopifyApi : Api {
         })
     }
 
+    override fun getProductVariantList(productVariantIdList: List<String>, callback: ApiCallback<List<ProductVariant>>) {
+
+        val query = Storefront.query {
+            val ids = productVariantIdList.map { ID(it) }
+            it.shop { shopQueryBuilder -> shopQueryBuilder.paymentSettings({ it.currencyCode() }) }
+            it.nodes(ids) {
+                it.id()
+                it.onProductVariant { getDefaultProductVariantQuery(it) }
+            }
+        }
+
+        val call = graphClient.queryGraph(query)
+        call.enqueue(object : QueryCallWrapper<List<ProductVariant>>(callback) {
+            override fun adapt(data: Storefront.QueryRoot): AdapterResult<List<ProductVariant>> {
+                val result: List<ProductVariant> = data.nodes
+                    .mapNotNull { it as? Storefront.ProductVariant }
+                    .map { ProductVariantAdapter.adapt(it) }
+                return AdapterResult.DataResult(result)
+            }
+        })
+    }
+
     override fun getProductList(perPage: Int, paginationValue: Any?, sortBy: SortType?,
                                 keyword: String?, excludeKeyword: String?,
                                 callback: ApiCallback<List<Product>>) {
