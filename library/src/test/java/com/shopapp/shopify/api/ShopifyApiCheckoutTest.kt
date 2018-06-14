@@ -262,7 +262,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val shippingRate = ShippingRate("title", BigDecimal.ZERO, "handle")
         val callback: ApiCallback<Checkout> = mock()
-        api.selectShippingRate(StorefrontMockInstantiator.DEFAULT_ID, shippingRate, callback)
+        api.setShippingRate(StorefrontMockInstantiator.DEFAULT_ID, shippingRate, callback)
 
         argumentCaptor<Checkout>().apply {
             verify(callback).onResult(capture())
@@ -284,7 +284,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val shippingRate = ShippingRate("title", BigDecimal.ZERO, "handle")
         val callback: ApiCallback<Checkout> = mock()
-        api.selectShippingRate(StorefrontMockInstantiator.DEFAULT_ID, shippingRate, callback)
+        api.setShippingRate(StorefrontMockInstantiator.DEFAULT_ID, shippingRate, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -301,7 +301,7 @@ class ShopifyApiCheckoutTest : BaseShopifyApiTest() {
 
         val shippingRate = ShippingRate("title", BigDecimal.ZERO, "handle")
         val callback: ApiCallback<Checkout> = mock()
-        api.selectShippingRate(StorefrontMockInstantiator.DEFAULT_ID, shippingRate, callback)
+        api.setShippingRate(StorefrontMockInstantiator.DEFAULT_ID, shippingRate, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())

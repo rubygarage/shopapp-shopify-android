@@ -36,10 +36,11 @@ jacocoAndroidUnitTestReport {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
-    implementation 'com.github.rubygarage:shopapp-android:1.0.5'
+//    implementation 'com.github.rubygarage:shopapp-android:1.0.5'
+    implementation 'com.github.rubygarage:shopapp-android:bf53b34d09'
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
@@ -51,7 +52,6 @@ dependencies {
     testImplementation "org.mockito:mockito-core:2.8.47"
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
     testImplementation "junit:junit:4.12"
-    androidTestImplementation "com.android.support.test:runner:1.0.1"
 }
 
 // build a jar with source files

@@ -175,11 +175,11 @@ class ShopifyApi : Api {
         callback.onResult(Unit)
     }
 
-    override fun isLoggedIn(callback: ApiCallback<Boolean>) {
+    override fun isSignedIn(callback: ApiCallback<Boolean>) {
         callback.onResult(getSession() != null)
     }
 
-    override fun forgotPassword(email: String, callback: ApiCallback<Unit>) {
+    override fun resetPassword(email: String, callback: ApiCallback<Unit>) {
 
         val mutationQuery = Storefront.mutation {
             it.customerRecover(email, {
@@ -228,7 +228,7 @@ class ShopifyApi : Api {
         }
     }
 
-    override fun createCustomerAddress(address: Address, callback: ApiCallback<String>) {
+    override fun addCustomerAddress(address: Address, callback: ApiCallback<String>) {
 
         val session = getSession()
         if (session == null) {
@@ -267,7 +267,7 @@ class ShopifyApi : Api {
         }
     }
 
-    override fun editCustomerAddress(addressId: String, address: Address, callback: ApiCallback<Unit>) {
+    override fun updateCustomerAddress(address: Address, callback: ApiCallback<Unit>) {
 
         val session = getSession()
         if (session == null) {
@@ -286,7 +286,7 @@ class ShopifyApi : Api {
                     .setPhone(address.phone)
                     .setZip(address.zip)
 
-                it.customerAddressUpdate(session.accessToken, ID(addressId), mailingAddressInput, {
+                it.customerAddressUpdate(session.accessToken, ID(address.id), mailingAddressInput, {
                     it.customerAddress { it.firstName() }
                     it.userErrors { getDefaultUserErrors(it) }
                 })
@@ -307,14 +307,14 @@ class ShopifyApi : Api {
         }
     }
 
-    override fun deleteCustomerAddress(addressId: String, callback: ApiCallback<Unit>) {
+    override fun deleteCustomerAddress(id: String, callback: ApiCallback<Unit>) {
 
         val session = getSession()
         if (session == null) {
             callback.onFailure(Error.NonCritical(UNAUTHORIZED_ERROR))
         } else {
             val mutation = Storefront.mutation {
-                it.customerAddressDelete(ID(addressId), session.accessToken, {
+                it.customerAddressDelete(ID(id), session.accessToken, {
                     it.deletedCustomerAddressId()
                     it.userErrors { getDefaultUserErrors(it) }
                 })
@@ -335,13 +335,13 @@ class ShopifyApi : Api {
         }
     }
 
-    override fun setDefaultShippingAddress(addressId: String, callback: ApiCallback<Unit>) {
+    override fun setDefaultShippingAddress(id: String, callback: ApiCallback<Unit>) {
         val session = getSession()
         if (session == null) {
             callback.onFailure(Error.NonCritical(UNAUTHORIZED_ERROR))
         } else {
             val mutation = Storefront.mutation {
-                it.customerDefaultAddressUpdate(session.accessToken, ID(addressId), {
+                it.customerDefaultAddressUpdate(session.accessToken, ID(id), {
                     it.customer { it.firstName() }
                     it.userErrors { getDefaultUserErrors(it) }
                 })
@@ -362,7 +362,7 @@ class ShopifyApi : Api {
         }
     }
 
-    override fun editCustomerInfo(firstName: String, lastName: String, phone: String, callback: ApiCallback<Customer>) {
+    override fun updateCustomer(firstName: String, lastName: String, phone: String, callback: ApiCallback<Customer>) {
         val session = getSession()
         if (session == null) {
             callback.onFailure(Error.NonCritical(UNAUTHORIZED_ERROR))
@@ -393,7 +393,7 @@ class ShopifyApi : Api {
         }
     }
 
-    override fun changePassword(password: String, callback: ApiCallback<Unit>) {
+    override fun updatePassword(password: String, callback: ApiCallback<Unit>) {
         val session = getSession()
         if (session == null) {
             callback.onFailure(Error.NonCritical(UNAUTHORIZED_ERROR))
@@ -525,12 +525,12 @@ class ShopifyApi : Api {
         })
     }
 
-    override fun getProductVariantList(productVariantIdList: List<String>, callback: ApiCallback<List<ProductVariant>>) {
+    override fun getProductVariants(ids: List<String>, callback: ApiCallback<List<ProductVariant>>) {
 
         val query = Storefront.query {
-            val ids = productVariantIdList.map { ID(it) }
+            val wrappedIds = ids.map { ID(it) }
             it.shop { shopQueryBuilder -> shopQueryBuilder.paymentSettings({ it.currencyCode() }) }
-            it.nodes(ids) {
+            it.nodes(wrappedIds) {
                 it.id()
                 it.onProductVariant { getDefaultProductVariantQuery(it) }
             }
@@ -547,7 +547,7 @@ class ShopifyApi : Api {
         })
     }
 
-    override fun getProductList(perPage: Int, paginationValue: Any?, sortBy: SortType?,
+    override fun getProducts(perPage: Int, paginationValue: Any?, sortBy: SortType?,
                                 keyword: String?, excludeKeyword: String?,
                                 callback: ApiCallback<List<Product>>) {
         val reverse = sortBy == SortType.RECENT
@@ -558,14 +558,14 @@ class ShopifyApi : Api {
         queryProducts(perPage, paginationValue, phrase, reverse, sortBy, callback)
     }
 
-    override fun searchProductList(perPage: Int, paginationValue: Any?,
-                                   searchQuery: String, callback: ApiCallback<List<Product>>) {
-        queryProducts(perPage, paginationValue, searchQuery, false, SortType.NAME, callback)
+    override fun searchProducts(perPage: Int, paginationValue: Any?,
+                                   query: String, callback: ApiCallback<List<Product>>) {
+        queryProducts(perPage, paginationValue, query, false, SortType.NAME, callback)
     }
 
     /* CATEGORY */
 
-    override fun getCategoryDetails(id: String, perPage: Int, paginationValue: Any?, sortBy: SortType?,
+    override fun getCategory(id: String, perPage: Int, paginationValue: Any?, sortBy: SortType?,
                                     callback: ApiCallback<Category>) {
 
         val reverse = sortBy == SortType.RECENT || sortBy == SortType.PRICE_HIGH_TO_LOW
@@ -629,7 +629,7 @@ class ShopifyApi : Api {
         })
     }
 
-    override fun getCategoryList(perPage: Int, paginationValue: Any?, callback: ApiCallback<List<Category>>) {
+    override fun getCategories(perPage: Int, paginationValue: Any?, callback: ApiCallback<List<Category>>) {
 
         val query = Storefront.query { rootQuery ->
             rootQuery.shop { shopQuery ->
@@ -685,7 +685,7 @@ class ShopifyApi : Api {
         })
     }
 
-    override fun getArticleList(perPage: Int, paginationValue: Any?, sortBy: SortType?,
+    override fun getArticles(perPage: Int, paginationValue: Any?, sortBy: SortType?,
                                 reverse: Boolean, callback: ApiCallback<List<Article>>) {
         val query = Storefront.query { rootQuery ->
             rootQuery.shop { shopQuery ->
@@ -719,7 +719,7 @@ class ShopifyApi : Api {
 
     /* SHOP */
 
-    override fun getShopInfo(callback: ApiCallback<Shop>) {
+    override fun getShop(callback: ApiCallback<Shop>) {
 
         val query = Storefront.query { rootQuery ->
             rootQuery.shop { shopQuery ->
@@ -775,9 +775,9 @@ class ShopifyApi : Api {
         }
     }
 
-    override fun getOrder(orderId: String, callback: ApiCallback<Order>) {
+    override fun getOrder(id: String, callback: ApiCallback<Order>) {
 
-        val nodeId = ID(orderId)
+        val nodeId = ID(id)
         val query = Storefront.query { root ->
             root.node(nodeId) {
                 it.onOrder {
@@ -807,10 +807,10 @@ class ShopifyApi : Api {
 
     /* CHECKOUT */
 
-    override fun createCheckout(cartProductList: List<CartProduct>, callback: ApiCallback<Checkout>) {
+    override fun createCheckout(cartProducts: List<CartProduct>, callback: ApiCallback<Checkout>) {
 
         val input = Storefront.CheckoutCreateInput().setLineItems(
-            cartProductList.map {
+            cartProducts.map {
                 Storefront.CheckoutLineItemInput(it.quantity, ID(it.productVariant.id))
             }
         )
@@ -836,9 +836,9 @@ class ShopifyApi : Api {
         })
     }
 
-    override fun getCheckout(checkoutId: String, callback: ApiCallback<Checkout>) {
+    override fun getCheckout(id: String, callback: ApiCallback<Checkout>) {
         val query = Storefront.query({
-            it.node(ID(checkoutId), {
+            it.node(ID(id), {
                 it.onCheckout {
                     getDefaultCheckoutQuery(it)
                 }
@@ -931,7 +931,7 @@ class ShopifyApi : Api {
         }, null, retryHandler)
     }
 
-    override fun selectShippingRate(checkoutId: String, shippingRate: ShippingRate, callback: ApiCallback<Checkout>) {
+    override fun setShippingRate(checkoutId: String, shippingRate: ShippingRate, callback: ApiCallback<Checkout>) {
 
         val checkoutQuery = Storefront.mutation {
             it.checkoutShippingLineUpdate(ID(checkoutId), shippingRate.handle, {

@@ -22,7 +22,7 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
         given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<Category> = mock()
-        api.getCategoryDetails(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
+        api.getCategory(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
 
         argumentCaptor<Category>().apply {
             verify(callback).onResult(capture())
@@ -39,7 +39,7 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(response)
 
         val callback: ApiCallback<Category> = mock()
-        api.getCategoryDetails(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
+        api.getCategory(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -55,7 +55,7 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnFailure()
 
         val callback: ApiCallback<Category> = mock()
-        api.getCategoryDetails(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
+        api.getCategory(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -75,7 +75,7 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
         given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<Category> = mock()
-        api.getCategoryDetails(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
+        api.getCategory(StorefrontMockInstantiator.DEFAULT_ID, any(), null, null, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -94,7 +94,7 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
         given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<List<Category>> = mock()
-        api.getCategoryList(any(), null, callback)
+        api.getCategories(any(), null, callback)
 
         argumentCaptor<List<Category>>().apply {
             verify(callback).onResult(capture())
@@ -112,7 +112,7 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(response)
 
         val callback: ApiCallback<List<Category>> = mock()
-        api.getCategoryList(any(), null, callback)
+        api.getCategories(any(), null, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -128,7 +128,7 @@ class ShopifyApiCategoryTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnFailure()
 
         val callback: ApiCallback<List<Category>> = mock()
-        api.getCategoryList(any(), null, callback)
+        api.getCategories(any(), null, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
