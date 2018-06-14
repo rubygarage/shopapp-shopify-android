@@ -175,7 +175,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
     fun isLoggedInShouldReturnTrueWhenSessionValid() {
         mockSession(true)
         val callback: ApiCallback<Boolean> = mock()
-        api.isLoggedIn(callback)
+        api.isSignedIn(callback)
 
         verify(callback).onResult(true)
     }
@@ -184,7 +184,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
     fun isLoggedInShouldReturnFalseWhenSessionInvalid() {
         mockSession(false)
         val callback: ApiCallback<Boolean> = mock()
-        api.isLoggedIn(callback)
+        api.isSignedIn(callback)
 
         verify(callback).onResult(false)
     }
@@ -212,7 +212,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         given(graphResponse.errors()).willReturn(listOf(userError))
 
         val callback: ApiCallback<Unit> = mock()
-        api.forgotPassword("", callback)
+        api.resetPassword("", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -235,7 +235,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         given(graphResponse.data()?.customerRecover).willReturn(customerRecoverPayload)
 
         val callback: ApiCallback<Unit> = mock()
-        api.forgotPassword("", callback)
+        api.resetPassword("", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -252,7 +252,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockMutationGraphCallWithOnFailure()
 
         val callback: ApiCallback<Unit> = mock()
-        api.forgotPassword("", callback)
+        api.resetPassword("", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -345,7 +345,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(true)
         val address = stubAddress()
         val callback: ApiCallback<String> = mock()
-        api.createCustomerAddress(address, callback)
+        api.addCustomerAddress(address, callback)
 
         argumentCaptor<String>().apply {
             verify(callback).onResult(capture())
@@ -368,7 +368,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(true)
         val address = stubAddress()
         val callback: ApiCallback<String> = mock()
-        api.createCustomerAddress(address, callback)
+        api.addCustomerAddress(address, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -386,7 +386,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(true)
         val address = stubAddress()
         val callback: ApiCallback<String> = mock()
-        api.createCustomerAddress(address, callback)
+        api.addCustomerAddress(address, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -401,7 +401,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(false)
         val address: Address = mock()
         val callback: ApiCallback<String> = mock()
-        api.createCustomerAddress(address, callback)
+        api.addCustomerAddress(address, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -425,7 +425,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(true)
         val address = stubAddress()
         val callback: ApiCallback<Unit> = mock()
-        api.editCustomerAddress(StorefrontMockInstantiator.DEFAULT_ID, address, callback)
+        api.updateCustomerAddress(address, callback)
 
         verify(callback).onResult(Unit)
         verify(callback, never()).onFailure(any())
@@ -444,7 +444,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(true)
         val address = stubAddress()
         val callback: ApiCallback<Unit> = mock()
-        api.editCustomerAddress(StorefrontMockInstantiator.DEFAULT_ID, address, callback)
+        api.updateCustomerAddress(address, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -462,7 +462,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(true)
         val address = stubAddress()
         val callback: ApiCallback<Unit> = mock()
-        api.editCustomerAddress(StorefrontMockInstantiator.DEFAULT_ID, address, callback)
+        api.updateCustomerAddress(address, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -477,7 +477,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(false)
         val address: Address = mock()
         val callback: ApiCallback<Unit> = mock()
-        api.editCustomerAddress(StorefrontMockInstantiator.DEFAULT_ID, address, callback)
+        api.updateCustomerAddress(address, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -641,7 +641,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         mockSession(true)
         val callback: ApiCallback<Customer> = mock()
-        api.editCustomerInfo("firstName", "lastName", "phone", callback)
+        api.updateCustomer("firstName", "lastName", "phone", callback)
 
         argumentCaptor<Customer>().apply {
             verify(callback).onResult(capture())
@@ -663,7 +663,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         mockSession(true)
         val callback: ApiCallback<Customer> = mock()
-        api.editCustomerInfo("firstName", "lastName", "phone", callback)
+        api.updateCustomer("firstName", "lastName", "phone", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -680,7 +680,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         mockSession(true)
         val callback: ApiCallback<Customer> = mock()
-        api.editCustomerInfo("firstName", "lastName", "phone", callback)
+        api.updateCustomer("firstName", "lastName", "phone", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -694,7 +694,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
     fun editCustomerInfoShouldReturnContentErrorWhenSessionInvalid() {
         mockSession(false)
         val callback: ApiCallback<Customer> = mock()
-        api.editCustomerInfo("firstName", "lastName", "phone", callback)
+        api.updateCustomer("firstName", "lastName", "phone", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -718,7 +718,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(true)
         mockSuccessRequestToken(graphResponse, mutationGraphCall, storefrontMutation)
         val callback: ApiCallback<Unit> = mock()
-        api.changePassword("password", callback)
+        api.updatePassword("password", callback)
 
         verify(callback).onResult(Unit)
         verify(callback, never()).onFailure(any())
@@ -737,7 +737,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(true)
         mockFailureRequestToken(graphResponse, mutationGraphCall, storefrontMutation)
         val callback: ApiCallback<Unit> = mock()
-        api.changePassword("password", callback)
+        api.updatePassword("password", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -760,7 +760,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
         mockSession(true)
         mockSuccessRequestToken(graphResponse, mutationGraphCall, storefrontMutation)
         val callback: ApiCallback<Unit> = mock()
-        api.changePassword("password", callback)
+        api.updatePassword("password", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -777,7 +777,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
 
         mockSession(true)
         val callback: ApiCallback<Unit> = mock()
-        api.changePassword("password", callback)
+        api.updatePassword("password", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -791,7 +791,7 @@ class ShopifyApiAuthTest : BaseShopifyApiTest() {
     fun changePasswordShouldReturnContentErrorWhenSessionInvalid() {
         mockSession(false)
         val callback: ApiCallback<Unit> = mock()
-        api.changePassword("password", callback)
+        api.updatePassword("password", callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())

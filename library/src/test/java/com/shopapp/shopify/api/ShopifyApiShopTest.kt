@@ -20,7 +20,7 @@ class ShopifyApiShopTest : BaseShopifyApiTest() {
         given(storefrontQueryRoot.shop).willReturn(storefrontShop)
 
         val callback: ApiCallback<Shop> = mock()
-        api.getShopInfo(callback)
+        api.getShop(callback)
 
         argumentCaptor<Shop>().apply {
             verify(callback).onResult(capture())
@@ -36,7 +36,7 @@ class ShopifyApiShopTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(response)
 
         val callback: ApiCallback<Shop> = mock()
-        api.getShopInfo(callback)
+        api.getShop(callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -52,7 +52,7 @@ class ShopifyApiShopTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnFailure()
 
         val callback: ApiCallback<Shop> = mock()
-        api.getShopInfo(callback)
+        api.getShop(callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())

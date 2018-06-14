@@ -96,7 +96,7 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
         given(storefrontShop.articles).willReturn(storefrontArticleConnection)
 
         val callback: ApiCallback<List<Article>> = mock()
-        api.getArticleList(any(), null, null, false, callback)
+        api.getArticles(any(), null, null, false, callback)
 
         argumentCaptor<List<Article>>().apply {
             verify(callback).onResult(capture())
@@ -113,7 +113,7 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnResponse(response)
 
         val callback: ApiCallback<List<Article>> = mock()
-        api.getArticleList(any(), null, null, false, callback)
+        api.getArticles(any(), null, null, false, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
@@ -129,7 +129,7 @@ class ShopifyApiBlogTest : BaseShopifyApiTest() {
         mockQueryGraphCallWithOnFailure()
 
         val callback: ApiCallback<List<Article>> = mock()
-        api.getArticleList(any(), null, null, false, callback)
+        api.getArticles(any(), null, null, false, callback)
 
         argumentCaptor<Error>().apply {
             verify(callback, never()).onResult(any())
